@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c87c3d758e1176a891e7a3a89612a688",
+    "content-hash": "3326893086232000ac69357e47ec384d",
     "packages": [
         {
             "name": "flutterwavedev/flutterwave-v3",

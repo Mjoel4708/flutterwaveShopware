@@ -19,9 +19,9 @@ use FlutterwavePay\Service\FlutterwavePayment;
 class FlutterwavePay extends Plugin
 {
     
-    public const PUBLIC_KEY = 'Flutterwavepay.config.flutterwavePublicKey';
-    public const SECRET_KEY = 'Flutterwavepay.config.flutterwaveSecretKey';
-    public const ENVIRONMENT = 'Flutterwavepay.config.flutterwaveEnvironment';
+    public const PUBLIC_KEY = 'FlutterwavePay.config.flutterwavePublicKey';
+    public const SECRET_KEY = 'FlutterwavePay.config.flutterwaveSecretKey';
+    public const ENVIRONMENT = 'FlutterwavePay.config.flutterwaveEnvironment';
 
     public function install(InstallContext $context): void
     {
@@ -63,8 +63,8 @@ class FlutterwavePay extends Plugin
         $flutterwavePaymentData = [
             // payment handler will be selected by the identifier
             'handlerIdentifier' => FlutterwavePayment::class,
-            'name' => 'FluteWave Payment',
-            'description' => 'Flutterwave Payment',
+            'name' => 'FlutterWave Payment',
+            'description' => 'Flutterwave gateway Payment shopware intergration',
             'pluginId' => $pluginId,
         ];
 

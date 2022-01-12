@@ -1,33 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
     <card>
-        <title>#FlutterwavePay# Settings</title>
+        <title>Settings</title>
         <title lang="de-DE">#FlutterwavePay# Einstellungen</title>
 
         <input-field type="text">
             <name>flutterwavePublicKey</name>
-            <label>#FlutterwavePay# Public Key</label>
+            <label>Public Key</label>
             <label lang="de-DE">#FlutterwavePay# Public Key</label>
             <help-text>#FlutterwavePay# API Public Key</help-text>
         </input-field>
         <input-field type="text">
             <name>flutterwaveSecretKey</name>
-            <label>#FlutterwavePay# Secret Key</label>
+            <label>Secret Key</label>
             <label lang="de-DE">#FlutterwavePay# Secret Key</label>
             <help-text>#FlutterwavePay# API Secret Key</help-text>
         </input-field>
         <input-field type="single-select">
             <name>flutterwaveEvironment</name>
             <label>#FlutterwavePay# Evironment</label>
-            <label lang="de-DE">#FlutterwavePay# Evironment</label>
+            <label lang="de-DE">Evironment</label>
             <help-text>#FlutterwavePay# Evironment eg live</help-text>
             <options>
-                <option value="live">Live</option>
-                <option value="staging">Staging</option>
+                <option>
+                    <value>live</value>
+                    <name>live</name>
+                    <name lang="de-DE">leben</name>
+
+                </option>
+                <option>
+                    <value>staging</value>
+                    <name>staging</name>
+                    <name lang="de-DE">
+                        Prüfung
+                    </name>
+                </option>
             </options>
 
         </input-field>
     </card>
-        
+
 </config>
