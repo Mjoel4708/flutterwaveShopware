@@ -1,6 +1,6 @@
 {
-  "name": "swag/plugin-skeleton",
-  "description": "Skeleton plugin",
+  "name": "fluttewave/pay-plugin",
+  "description": "Flutterwave Payment Plugin",
   "type": "shopware-platform-plugin",
   "license": "MIT",
   "autoload": {
@@ -11,8 +11,11 @@
   "extra": {
     "shopware-plugin-class": "FlutterwavePay\\FlutterwavePay",
     "label": {
-      "de-DE": "Skeleton plugin",
-      "en-GB": "Skeleton plugin"
+      "de-DE": "Flutterwave payment plugin",
+      "en-GB": "Flutterwave payment plugin"
     }
+  },
+  "require": {
+    "flutterwavedev/flutterwave-v3": "^1.0"
   }
 }
