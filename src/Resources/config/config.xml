@@ -7,29 +7,37 @@
         <input-field type="text">
             <name>flutterwavePublicKey</name>
             <label>Public Key</label>
-            <label lang="de-DE">#FlutterwavePay# Public Key</label>
-            <help-text>#FlutterwavePay# API Public Key</help-text>
+            <label lang="de-DE">Public Key</label>
+            <help-text>You can get your keys from Flutterwave dashboard https://dashboard.flutterwave.com/dashboard/settings/apis </help-text>
         </input-field>
         <input-field type="text">
             <name>flutterwaveSecretKey</name>
             <label>Secret Key</label>
             <label lang="de-DE">#FlutterwavePay# Secret Key</label>
-            <help-text>#FlutterwavePay# API Secret Key</help-text>
+            <help-text>You can get your keys from Flutterwave dashboard https://dashboard.flutterwave.com/dashboard/settings/apis </help-text>
+        </input-field>
+        <input-field type="text">
+            <name>flutterwaveEncryptionKey</name>
+            <label>Encryption Key</label>
+            <label lang="de-DE">#FlutterwavePay# Encryption Key</label>
+            <help-text>Get the Encryption Key from flutterwave dashboard https://dashboard.flutterwave.com</help-text>
         </input-field>
         <input-field type="single-select">
             <name>flutterwaveEvironment</name>
             <label>#FlutterwavePay# Evironment</label>
             <label lang="de-DE">Evironment</label>
-            <help-text>#FlutterwavePay# Evironment eg live</help-text>
+            <help-text>System's environment testing or live</help-text>
             <options>
                 <option>
                     <value>live</value>
+                    <id>Live</id>
                     <name>live</name>
                     <name lang="de-DE">leben</name>
 
                 </option>
                 <option>
                     <value>staging</value>
+                    <id>Staging</id>
                     <name>staging</name>
                     <name lang="de-DE">
                         Prüfung

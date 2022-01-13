@@ -21,6 +21,7 @@ class FlutterwavePay extends Plugin
     
     public const PUBLIC_KEY = 'FlutterwavePay.config.flutterwavePublicKey';
     public const SECRET_KEY = 'FlutterwavePay.config.flutterwaveSecretKey';
+    public const ENCRYPTION_KEY = 'FlutterwavePay.config.flutterwaveEncryptionKey';
     public const ENVIRONMENT = 'FlutterwavePay.config.flutterwaveEnvironment';
 
     public function install(InstallContext $context): void
