@@ -16,6 +16,7 @@
     }
   },
   "require": {
-    "flutterwavedev/flutterwave-v3": "^1.0"
+    "flutterwavedev/flutterwave-v3": "^1.0",
+    "seunex17/flutterwave-php-payment-gateway": "^1.0"
   }
 }

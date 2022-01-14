@@ -30,7 +30,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '5e6295c18c5e3204a98647a1ada055a28afb4d91',
+    'reference' => 'cd89e06a30dd734dbbc6d30d8f76f17cdf4f8680',
     'name' => 'fluttewave/pay-plugin',
   ),
   'versions' => 
@@ -51,7 +51,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '5e6295c18c5e3204a98647a1ada055a28afb4d91',
+      'reference' => 'cd89e06a30dd734dbbc6d30d8f76f17cdf4f8680',
     ),
     'mashape/unirest-php' => 
     array (
@@ -86,6 +86,15 @@ private static $installed = array (
       array (
         0 => '1.0.0 || 2.0.0 || 3.0.0',
       ),
+    ),
+    'seunex17/flutterwave-php-payment-gateway' => 
+    array (
+      'pretty_version' => 'v1.0.0',
+      'version' => '1.0.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '865780cffdf97f7c590c265bf297e78becedda61',
     ),
     'symfony/polyfill-ctype' => 
     array (

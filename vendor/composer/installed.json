@@ -268,6 +268,49 @@
             "install-path": "../psr/log"
         },
         {
+            "name": "seunex17/flutterwave-php-payment-gateway",
+            "version": "v1.0.0",
+            "version_normalized": "1.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/seunex17/flutterwave-php-payment-gateway.git",
+                "reference": "865780cffdf97f7c590c265bf297e78becedda61"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/seunex17/flutterwave-php-payment-gateway/zipball/865780cffdf97f7c590c265bf297e78becedda61",
+                "reference": "865780cffdf97f7c590c265bf297e78becedda61",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.0"
+            },
+            "time": "2021-02-15T22:19:15+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Flutterwave\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "seunex17",
+                    "email": "seunexseun@gmail.com"
+                }
+            ],
+            "description": "An easy to use php package for flutterway payment gateway",
+            "support": {
+                "issues": "https://github.com/seunex17/flutterwave-php-payment-gateway/issues",
+                "source": "https://github.com/seunex17/flutterwave-php-payment-gateway/tree/v1.0.0"
+            },
+            "install-path": "../seunex17/flutterwave-php-payment-gateway"
+        },
+        {
             "name": "symfony/polyfill-ctype",
             "version": "v1.24.0",
             "version_normalized": "1.24.0.0",

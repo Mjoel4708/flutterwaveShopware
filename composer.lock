@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3326893086232000ac69357e47ec384d",
+    "content-hash": "547f9fa2e73e4753fb088731b8da2d25",
     "packages": [
         {
             "name": "flutterwavedev/flutterwave-v3",
@@ -260,6 +260,46 @@
                 "source": "https://github.com/php-fig/log/tree/1.1.4"
             },
             "time": "2021-05-03T11:20:27+00:00"
+        },
+        {
+            "name": "seunex17/flutterwave-php-payment-gateway",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/seunex17/flutterwave-php-payment-gateway.git",
+                "reference": "865780cffdf97f7c590c265bf297e78becedda61"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/seunex17/flutterwave-php-payment-gateway/zipball/865780cffdf97f7c590c265bf297e78becedda61",
+                "reference": "865780cffdf97f7c590c265bf297e78becedda61",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Flutterwave\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "seunex17",
+                    "email": "seunexseun@gmail.com"
+                }
+            ],
+            "description": "An easy to use php package for flutterway payment gateway",
+            "support": {
+                "issues": "https://github.com/seunex17/flutterwave-php-payment-gateway/issues",
+                "source": "https://github.com/seunex17/flutterwave-php-payment-gateway/tree/v1.0.0"
+            },
+            "time": "2021-02-15T22:19:15+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",

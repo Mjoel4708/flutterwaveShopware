@@ -9,7 +9,7 @@ return array(
     'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
-    'Flutterwave\\' => array($vendorDir . '/flutterwavedev/flutterwave-v3/library/Rave'),
+    'Flutterwave\\' => array($vendorDir . '/flutterwavedev/flutterwave-v3/library/Rave', $vendorDir . '/seunex17/flutterwave-php-payment-gateway/src'),
     'FlutterwavePay\\' => array($baseDir . '/src'),
     'Dotenv\\' => array($vendorDir . '/vlucas/phpdotenv/src'),
 );

@@ -50,6 +50,7 @@ class ComposerStaticInitfb3b097a2865b630cdc6ce2c2f7c2f7a
         'Flutterwave\\' => 
         array (
             0 => __DIR__ . '/..' . '/flutterwavedev/flutterwave-v3/library/Rave',
+            1 => __DIR__ . '/..' . '/seunex17/flutterwave-php-payment-gateway/src',
         ),
         'FlutterwavePay\\' => 
         array (

@@ -1,0 +1,19 @@
+{
+    "name": "seunex17/flutterwave-php-payment-gateway",
+    "description": "An easy to use php package for flutterway payment gateway",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "seunex17",
+            "email": "seunexseun@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.0"
+    },
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {"Flutterwave\\": "src/"}
+    }
+}
