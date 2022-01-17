@@ -29,7 +29,7 @@ class FlutterwavePayment implements AsynchronousPaymentHandlerInterface
     {
         // Method that sends the return URL to the external gateway and gets a redirect URL back
         try {
-            $redirectUrl = $this->sendReturnUrlToExternalGateway($transaction->getReturnUrl());
+            $redirectUrl = $this->sendReturnUrlToExternalGateway($transaction, $transaction->getReturnUrl(), );
         } catch (\Exception $e) {
             throw new AsyncPaymentProcessException(
                 $transaction->getOrderTransaction()->getId(),
@@ -69,13 +69,13 @@ class FlutterwavePayment implements AsynchronousPaymentHandlerInterface
         }
     }
 
-    private function sendReturnUrlToExternalGateway(string $getReturnUrl): string
+    private function sendReturnUrlToExternalGateway(AsyncPaymentTransactionStruct $transaction, string $getReturnUrl): string
     {
         $paymentProviderUrl = '';
 
         // Do some API Call to your payment provider
 
-        
+
 
 
         return $paymentProviderUrl;

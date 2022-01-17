@@ -5,7 +5,8 @@
   "license": "MIT",
   "autoload": {
     "psr-4": {
-      "FlutterwavePay\\": "src/"
+      "FlutterwavePay\\": "src/",
+      "FlutterwaveApi\\": "src/Api"
     }
   },
   "extra": {
