@@ -1,5 +1,7 @@
+{% sw_extends '@Storefront/storefront/component/product/quickview/minimal.html.twig' %}
+
 {% block payment_form_flutterwave %}
-	<form action="/Api/processPayment.php" id="paymentForm">
+	<form action="{{ path('flutterwave.payment.method') }}" id="paymentForm">
 		<input
 		type="hidden" name="amount" value="200"/>
 		<!-- Replace the value with your transaction amount -->

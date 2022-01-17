@@ -6,7 +6,13 @@
     <services>
         <service id="FlutterwavePay\Service\FlutterwavePayment">
             <argument type="service" id="Shopware\Core\Checkout\Order\Aggregate\OrderTransaction\OrderTransactionStateHandler"/>
+            <argument type="service" id="router.default"/>
             <tag name="shopware.payment.method.async" />
+        </service>
+        <service id="FlutterwavePay\Storefront\Controller\FlutterwaveController" public="true">
+            <argument type="service" id="sales_channel.product.repository"/>
+            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\SalesChannelContextService"/>
+
         </service>
     </services>
 </container>

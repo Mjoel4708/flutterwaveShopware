@@ -12,14 +12,18 @@ use Shopware\Core\Checkout\Order\Aggregate\OrderTransaction\OrderTransactionStat
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\RouterInterface;
 
 class FlutterwavePayment implements AsynchronousPaymentHandlerInterface
 {
     private OrderTransactionStateHandler $transactionStateHandler;
+    private RouterInterface $router;
 
-    public function __construct(OrderTransactionStateHandler $transactionStateHandler) {
+    public function __construct(OrderTransactionStateHandler $transactionStateHandler, RouterInterface $router) {
         $this->transactionStateHandler = $transactionStateHandler;
+        $this->router = $router;
     }
 
     /**
@@ -29,16 +33,16 @@ class FlutterwavePayment implements AsynchronousPaymentHandlerInterface
     {
         // Method that sends the return URL to the external gateway and gets a redirect URL back
         try {
-            $redirectUrl = $this->sendReturnUrlToExternalGateway($transaction, $transaction->getReturnUrl(), );
+            $redirectUrl = $this->sendReturnUrlToExternalGateway($transaction, $transaction->getReturnUrl());
         } catch (\Exception $e) {
             throw new AsyncPaymentProcessException(
                 $transaction->getOrderTransaction()->getId(),
                 'An error occurred during the communication with external payment gateway' . PHP_EOL . $e->getMessage()
             );
         }
-
+        $testUrl = $this->router->generate('flutterwave.payment.form');
         // Redirect to external gateway
-        return new RedirectResponse($redirectUrl);
+        return new RedirectResponse($testUrl);
     }
 
     /**
@@ -71,12 +75,9 @@ class FlutterwavePayment implements AsynchronousPaymentHandlerInterface
 
     private function sendReturnUrlToExternalGateway(AsyncPaymentTransactionStruct $transaction, string $getReturnUrl): string
     {
-        $paymentProviderUrl = '';
-
-        // Do some API Call to your payment provider
-
-
-
+        $paymentProviderUrl =  '/checkout/cart';
+        
+        
 
         return $paymentProviderUrl;
     }

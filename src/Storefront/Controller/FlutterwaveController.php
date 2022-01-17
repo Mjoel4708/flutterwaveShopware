@@ -8,18 +8,29 @@ use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use FlutterwaveApi\myEventHandler;
 use Flutterwave\Rave;
+use Shopware\Storefront\Controller\StorefrontController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
-class FlutterwaveController
+/**
+ * @RouterScope(scopes={"storefront"})
+ */
+class FlutterwaveController extends StorefrontController
 {
     
+    public function __construct(Request $request, SalesChannelContext $context)
+    
+    {
+        $this->request = $request;
+        $this->context = $context;
+    }
     
     
     
     
     /**
      * @HttpCache
-     * @Route("/kamsware/flutterwave/payment", name="flutterwave.payment.method", options={"seo"="false"} methods={"POST", "GET"})
+     * @Route("/kamsw/flutterwave/payment", name="flutterwave.payment.method", options={"seo"="false"} methods={"POST"})
      */
     public function flutterwavePayment(OrderEntity $order, Request $request, SalesChannelContext $salesChannelContext)
     {
@@ -95,7 +106,15 @@ class FlutterwaveController
             }
         }
     }
-    
+    /**
+     * 
+     * @HttpCache
+     * @Route("/kamsw/flutterwave/payment/form", name="flutterwave.payment.form", options={"seo"="false"} methods={"GET"})
+     */
+    public function flutterwavePaymentForm(): Response
+    {
+        return $this->renderStorefront('@Storefront/storefront/page/checkout/confirm/index.html.twig');
+    }
     
     function getTransactionData(
         OrderEntity $order,
