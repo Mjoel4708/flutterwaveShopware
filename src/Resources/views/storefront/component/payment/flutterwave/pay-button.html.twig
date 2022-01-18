@@ -1,11 +1,11 @@
-{% sw_extends '@Storefront/storefront/page/checkout/confirm/index.html' %}
+{% sw_extends '@Storefront/storefront/base.html.twig' %}
 
-{% block page_checkout_confirm_form_submit %}
+{% block base_content %}
 	{{ parent() }}
 	<pre>
 		{{ dump() }}
 	</pre>
-	<form action="{{ path('flutterwave.payment.method') }}" id="flutterwavePaymentForm">
+	<form action="{{ path('flutterwave.payment.method') }}" id="flutterwavePaymentForm" method="POST">
 		<input
 		type="hidden" name="amount" value="200"/>
 		<!-- Replace the value with your transaction amount -->
@@ -52,12 +52,8 @@
 		type="hidden" name="failureurl" value="http://request.lendlot.com/13b9gxc1?status=failed">
 		<!-- Put your failure url here -->
 		<center><input id="btn-of-destiny" class="btn btn-warning" type="submit" value="Pay Now"/></center>
-		<button id="confirmFormSubmit" class="btn btn-primary btn-block btn-lg" form="flutterwavePaymentForm" {% if page.cart.errors.blockOrder %} disabled {% endif %} type="submit">
-			{{ "checkout.confirmSubmit"|trans|sw_sanitize }}
-		</button>
-	</form>
 
-	
+	</form>
 
 
 	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>

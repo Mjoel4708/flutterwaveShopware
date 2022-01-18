@@ -2,49 +2,60 @@
 
 declare(strict_types=1);
 
-namespace FlutterwavePay\Storefront\Contoller;
+namespace FlutterwavePay\Storefront\Controller;
 
 use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use FlutterwaveApi\myEventHandler;
 use Flutterwave\Rave;
+use Shopware\Core\Checkout\Cart\Error\Error;
+use Shopware\Core\Framework\Routing\Annotation\RouteScope;
+use Shopware\Core\Framework\Rule\SalesChannelRule;
+use Shopware\Storefront\Framework\Cache\Annotation\HttpCache;
 use Shopware\Storefront\Controller\StorefrontController;
+use Shopware\Storefront\Page\Product\QuickView\MinimalQuickViewPageLoader;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @RouterScope(scopes={"storefront"})
+ * @RouteScope(scopes={"storefront"})
  */
 class FlutterwaveController extends StorefrontController
 {
     
-    public function __construct(Request $request, SalesChannelContext $context)
-    
-    {
-        $this->request = $request;
-        $this->context = $context;
+   
+
+
+    public function __construct(
+        MinimalQuickViewPageLoader $quickViewPageLoader
+    ) {
+        $this->quickViewPageLoader = $quickViewPageLoader;
     }
     
+    
+
+  
     
     
     
     /**
      * @HttpCache
-     * @Route("/kamsw/flutterwave/payment", name="flutterwave.payment.method", options={"seo"="false"} methods={"POST"})
+     * @Route("/kamsw/flutterwave/payment", name="flutterwave.payment.method", options={"seo"="false"}, methods={"GET","POST"})
      */
-    public function flutterwavePayment(OrderEntity $order, Request $request, SalesChannelContext $salesChannelContext)
+    public function flutterwavePayment(Request $request, SalesChannelContext $salesChannelContext)
     {
         $URL = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
         $getData = $_GET;
         $postData = $_POST;
-        $publicKey = $_SERVER['PUBLIC_KEY'];
-        $secretKey = $_SERVER['SECRET_KEY'];
+        $publicKey = 'FLWPUBK_TEST-7aa8f8204bcb5d67cd7e38ef4427e4a4-X';
+        $secretKey = 'FLWSECK_TEST-262bad484ea5a1e4347f8cc58a203d9d-X';
         if(isset($_POST) && isset($postData['successurl']) && isset($postData['failureurl'])){
             $success_url = $postData['successurl'];
             $failure_url = $postData['failureurl'];
         }
         
-        $env = $_SERVER['ENV'];
+        $env = 'staging';
         
         if(isset($postData['amount'])){
             $_SESSION['publicKey'] = $publicKey;
@@ -109,11 +120,12 @@ class FlutterwaveController extends StorefrontController
     /**
      * 
      * @HttpCache
-     * @Route("/kamsw/flutterwave/payment/form", name="flutterwave.payment.form", options={"seo"="false"} methods={"GET"})
+     * @Route("/kamsw/flutterwave/payment/form", name="flutterwave.payment.form", options={"seo"="false"}, methods={"GET"}, defaults={"XmlHttpRequest"=true})
      */
-    public function flutterwavePaymentForm(): Response
+    public function flutterwavePaymentForm(Request $request, SalesChannelContext $context): Response
     {
-        return $this->renderStorefront('@Storefront/storefront/page/checkout/confirm/index.html.twig');
+        
+        return $this->renderStorefront('@Storefront/storefront/component/payment/flutterwave/pay-button.html.twig');
     }
     
     function getTransactionData(
@@ -182,5 +194,6 @@ class FlutterwaveController extends StorefrontController
     }
     function generateRedirectUrl()
     {
+
     }
 }

@@ -9,6 +9,7 @@ use Shopware\Core\Checkout\Payment\Cart\PaymentHandler\AsynchronousPaymentHandle
 use Shopware\Core\Checkout\Payment\Exception\AsyncPaymentProcessException;
 use Shopware\Core\Checkout\Payment\Exception\CustomerCanceledAsyncPaymentException;
 use Shopware\Core\Checkout\Order\Aggregate\OrderTransaction\OrderTransactionStateHandler;
+use Shopware\Core\Content\Seo\SeoUrlPlaceholderHandler;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -19,10 +20,12 @@ use Symfony\Component\Routing\RouterInterface;
 class FlutterwavePayment implements AsynchronousPaymentHandlerInterface
 {
     private OrderTransactionStateHandler $transactionStateHandler;
+    private SeoUrlPlaceholderHandler $seoUrlPlaceholderHandler;
     private RouterInterface $router;
 
-    public function __construct(OrderTransactionStateHandler $transactionStateHandler, RouterInterface $router) {
+    public function __construct(OrderTransactionStateHandler $transactionStateHandler, RouterInterface $router, SeoUrlPlaceholderHandler $seoUrlPlaceholderHandler) {
         $this->transactionStateHandler = $transactionStateHandler;
+        $this->seoUrlPlaceholderHandler = $seoUrlPlaceholderHandler;
         $this->router = $router;
     }
 
@@ -41,6 +44,9 @@ class FlutterwavePayment implements AsynchronousPaymentHandlerInterface
             );
         }
         $testUrl = $this->router->generate('flutterwave.payment.form');
+        $testUrls = $this->seoUrlPlaceholderHandler->generate('flutterwave.payment.form', [], $salesChannelContext->getContext());
+
+        
         // Redirect to external gateway
         return new RedirectResponse($testUrl);
     }
