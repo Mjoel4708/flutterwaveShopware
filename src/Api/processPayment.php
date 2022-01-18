@@ -3,7 +3,7 @@
 
 namespace FlutterwaveApi;
 
-session_start() ;
+//session_start() ;
 // session_destroy();
 // Prevent direct access to this class
 

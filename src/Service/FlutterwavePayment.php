@@ -43,12 +43,12 @@ class FlutterwavePayment implements AsynchronousPaymentHandlerInterface
                 'An error occurred during the communication with external payment gateway' . PHP_EOL . $e->getMessage()
             );
         }
-        $testUrl = $this->router->generate('flutterwave.payment.form');
-        $testUrls = $this->seoUrlPlaceholderHandler->generate('flutterwave.payment.form', [], $salesChannelContext->getContext());
+        //$testUrl = $this->router->generate('flutterwave.payment.form');
+        
 
         
         // Redirect to external gateway
-        return new RedirectResponse($testUrl);
+        return new RedirectResponse($redirectUrl);
     }
 
     /**
@@ -81,7 +81,9 @@ class FlutterwavePayment implements AsynchronousPaymentHandlerInterface
 
     private function sendReturnUrlToExternalGateway(AsyncPaymentTransactionStruct $transaction, string $getReturnUrl): string
     {
-        $paymentProviderUrl =  '/checkout/cart';
+        $order = $transaction->getOrder();
+        
+        $paymentProviderUrl =  $this->router->generate('flutterwave.payment.form', ['order' => $order]);
         
         
 

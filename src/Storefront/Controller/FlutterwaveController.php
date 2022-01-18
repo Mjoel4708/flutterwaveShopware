@@ -8,6 +8,7 @@ use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use FlutterwaveApi\myEventHandler;
 use Flutterwave\Rave;
+use FlutterwaveApi\processPayment;
 use Shopware\Core\Checkout\Cart\Error\Error;
 use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Shopware\Storefront\Framework\Cache\Annotation\HttpCache;
@@ -44,77 +45,7 @@ class FlutterwaveController extends StorefrontController
      */
     public function flutterwavePayment(Request $request, SalesChannelContext $salesChannelContext)
     {
-        $URL = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-        $getData = $_GET;
-        $postData = $_POST;
-        $publicKey = 'FLWPUBK_TEST-7aa8f8204bcb5d67cd7e38ef4427e4a4-X';
-        $secretKey = 'FLWSECK_TEST-262bad484ea5a1e4347f8cc58a203d9d-X';
-        if(isset($_POST) && isset($postData['successurl']) && isset($postData['failureurl'])){
-            $success_url = $postData['successurl'];
-            $failure_url = $postData['failureurl'];
-        }
-        
-        $env = 'staging';
-        
-        if(isset($postData['amount'])){
-            $_SESSION['publicKey'] = $publicKey;
-            $_SESSION['secretKey'] = $secretKey;
-            $_SESSION['env'] = $env;
-            $_SESSION['successurl'] = $success_url;
-            $_SESSION['failureurl'] = $failure_url;
-            $_SESSION['currency'] = $postData['currency'];
-            $_SESSION['amount'] = $postData['amount'];
-        }
-        
-        $prefix = 'TP'; // Change this to the name of your business or app
-        $overrideRef = false;
-        
-        // Uncomment here to enforce the useage of your own ref else a ref will be generated for you automatically
-        if(isset($postData['ref'])){
-            $prefix = $postData['ref'];
-            $overrideRef = true;
-        }
-        
-        $payment = new Rave($_SESSION['secretKey'], $prefix, $overrideRef);
-        
-        
-        if(isset($postData['amount'])){
-            // Make payment
-            $payment
-            ->eventHandler(new myEventHandler)
-            ->setAmount($postData['amount'])
-            ->setPaymentOptions($postData['payment_options']) // value can be card, account or both
-            ->setDescription($postData['description'])
-            ->setLogo($postData['logo'])
-            ->setTitle($postData['title'])
-            ->setCountry($postData['country'])
-            ->setCurrency($postData['currency'])
-            ->setEmail($postData['email'])
-            ->setFirstname($postData['firstname'])
-            ->setLastname($postData['lastname'])
-            ->setPhoneNumber($postData['phonenumber'])
-            ->setPayButtonText($postData['pay_button_text'])
-            ->setRedirectUrl($URL)
-            // ->setMetaData(array('metaname' => 'SomeDataName', 'metavalue' => 'SomeValue')) // can be called multiple times. Uncomment this to add meta datas
-            // ->setMetaData(array('metaname' => 'SomeOtherDataName', 'metavalue' => 'SomeOtherValue')) // can be called multiple times. Uncomment this to add meta datas
-            ->initialize();
-        }else{
-            if(isset($getData['cancelled'])){
-                // Handle canceled payments
-                $payment
-                ->eventHandler(new myEventHandler)
-                ->paymentCanceled($getData['cancelled']);
-            }elseif(isset($getData['tx_ref'])){
-                // Handle completed payments
-                $payment->logger->notice('Payment completed. Now requerying payment.');
-                $payment
-                ->eventHandler(new myEventHandler)
-                ->requeryTransaction($getData['transaction_id']);
-            }else{
-                $payment->logger->warn('Stop!!! Please pass the txref parameter!');
-                echo 'Stop!!! Please pass the txref parameter!';
-            }
-        }
+        $processPayment = new processPayment();
     }
     /**
      * 
