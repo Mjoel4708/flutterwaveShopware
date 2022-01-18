@@ -10,7 +10,6 @@ use FlutterwaveApi\myEventHandler;
 use Flutterwave\Rave;
 use Shopware\Core\Checkout\Cart\Error\Error;
 use Shopware\Core\Framework\Routing\Annotation\RouteScope;
-use Shopware\Core\Framework\Rule\SalesChannelRule;
 use Shopware\Storefront\Framework\Cache\Annotation\HttpCache;
 use Shopware\Storefront\Controller\StorefrontController;
 use Shopware\Storefront\Page\Product\QuickView\MinimalQuickViewPageLoader;
