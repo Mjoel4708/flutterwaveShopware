@@ -44,10 +44,18 @@ class FlutterwaveController extends StorefrontController
     
     /**
      * @HttpCache
-     * @Route("/kamsw/flutterwave/payment", name="flutterwave.payment.method", options={"seo"="false"}, methods={"GET","POST"})
+     * @Route("/kamsw/flutterwave/payment/process/{orderId}", name="flutterwave.payment.method", options={"seo"="false"}, methods={"GET","POST"}, defaults={"XmlHttpRequest": true})
      */
-    public function flutterwavePayment(Request $request, SalesChannelContext $salesChannelContext)
+    public function flutterwavePayment(string $orderId, Request $request, SalesChannelContext $context)
     {
+        $criteria = new Criteria([$orderId]);
+        $order = $this->orderRepository->search($criteria, $context->getContext())->first();
+        $data = $this->getTransactionData($order, $context);
+        if($data['amount'] != $request->request->get('amount')){
+            //echo json_encode(['status' => 'error', 'message' => $data['amount'] . ' ' . $request->request->get('amount')]);
+            //throw new \Exception('Amount mismatch');
+            return new Response('Amount mismatch', 400);
+        }
         $processPayment = new processPayment();
     }
     /**

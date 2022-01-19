@@ -5,14 +5,15 @@
 	<pre>
 		{{ dump() }}
 	</pre>
-	<form method="post" action="{{ path('flutterwave.payment.method') }}" id="flutterwavePaymentForm">
+	{% set id = order.id %}
+	<form action="{{ path('flutterwave.payment.method', {'orderId': id}) }}" method="post" id="flutterwavePaymentForm">
 
 
 		{% block payment_button_form_csrf %}
 			{{ sw_csrf('flutterwave.payment.method') }}
 		{% endblock %}
 		<input
-		type="hidden" name="amount" value="{{ order.amountTotal}}"/>
+		type="hidden" name="amount" value="{{ order.amountTotal }}"/>
 		<!-- Replace the value with your transaction amount -->
 		<input
 		type="hidden" name="payment_options" value="mpesa, card, account, ussd"/>

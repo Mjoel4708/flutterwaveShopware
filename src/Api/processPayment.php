@@ -18,7 +18,7 @@ include('library/raveEventHandlerInterface.php');
 use Flutterwave\Rave;
 use Flutterwave\EventHandlerInterface;
 
-
+use FlutterwavePay\FlutterwavePay;
 
 $URL = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 $getData = $_GET;
