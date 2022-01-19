@@ -11,8 +11,7 @@
             <tag name="shopware.payment.method.async" />
         </service>
         <service id="FlutterwavePay\Storefront\Controller\FlutterwaveController" public="true">
-            <argument type="service" id="Shopware\Storefront\Page\Product\QuickView\MinimalQuickViewPageLoader"/>
-            <argument type="service" id="sales_channel.product.repository"/>
+            <argument type="service" id="order.repository"/>
             <argument type="service" id="Shopware\Core\System\SalesChannel\Context\SalesChannelContextService"/>
             <call method="setContainer">
                 <argument type="service" id="service_container"/>

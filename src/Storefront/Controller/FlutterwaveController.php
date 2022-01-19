@@ -10,6 +10,10 @@ use FlutterwaveApi\myEventHandler;
 use Flutterwave\Rave;
 use FlutterwaveApi\processPayment;
 use Shopware\Core\Checkout\Cart\Error\Error;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\Read\EntityReaderInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Shopware\Storefront\Framework\Cache\Annotation\HttpCache;
 use Shopware\Storefront\Controller\StorefrontController;
@@ -24,13 +28,12 @@ use Symfony\Component\HttpFoundation\Response;
 class FlutterwaveController extends StorefrontController
 {
     
-   
+   private EntityRepositoryInterface $orderRepository;
 
 
-    public function __construct(
-        MinimalQuickViewPageLoader $quickViewPageLoader
-    ) {
-        $this->quickViewPageLoader = $quickViewPageLoader;
+    public function __construct(EntityRepositoryInterface $orderRepository)
+    {
+        $this->orderRepository = $orderRepository;
     }
     
     
@@ -50,12 +53,16 @@ class FlutterwaveController extends StorefrontController
     /**
      * 
      * @HttpCache
-     * @Route("/kamsw/flutterwave/payment/form", name="flutterwave.payment.form", options={"seo"="false"}, methods={"GET"}, defaults={"XmlHttpRequest"=true})
+     * @Route("/kamsw/flutterwave/payment/{orderId}", name="flutterwave.payment.form", options={"seo"="false"}, methods={"GET"}, defaults={"XmlHttpRequest"=true})
      */
-    public function flutterwavePaymentForm(Request $request, SalesChannelContext $context): Response
+    public function flutterwavePaymentForm(string $orderId, Request $request, SalesChannelContext $context): Response
     {
+        $criteria = new Criteria([$orderId]);
+        $order = $this->orderRepository->search($criteria, $context->getContext())->first();
+        return $this->renderStorefront('@Storefront/storefront/component/payment/flutterwave/pay-button.html.twig', [
+            'order' => $order,
+        ]);
         
-        return $this->renderStorefront('@Storefront/storefront/component/payment/flutterwave/pay-button.html.twig');
     }
     
     function getTransactionData(

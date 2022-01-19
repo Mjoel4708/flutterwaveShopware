@@ -82,8 +82,8 @@ class FlutterwavePayment implements AsynchronousPaymentHandlerInterface
     private function sendReturnUrlToExternalGateway(AsyncPaymentTransactionStruct $transaction, string $getReturnUrl): string
     {
         $order = $transaction->getOrder();
-        
-        $paymentProviderUrl =  $this->router->generate('flutterwave.payment.form', ['order' => $order]);
+        $orderId = $order->getId();
+        $paymentProviderUrl =  $this->router->generate('flutterwave.payment.form', ['orderId' => $orderId], UrlGeneratorInterface::ABSOLUTE_URL);
         
         
 
