@@ -54,7 +54,9 @@ class FlutterwaveController extends StorefrontController
         if($data['amount'] != $request->request->get('amount')){
             //echo json_encode(['status' => 'error', 'message' => $data['amount'] . ' ' . $request->request->get('amount')]);
             //throw new \Exception('Amount mismatch');
-            return new Response('Amount mismatch', 400);
+            $respose = new Response('Amount mismatch', 400);
+            return $this->renderStorefront('@Storefront/storefront/component/payment/flutterwave/pay-button.html.twig'
+            , ['order' => $order, 'response' => $respose]);
         }
         $processPayment = new processPayment();
     }
@@ -69,6 +71,7 @@ class FlutterwaveController extends StorefrontController
         $order = $this->orderRepository->search($criteria, $context->getContext())->first();
         return $this->renderStorefront('@Storefront/storefront/component/payment/flutterwave/pay-button.html.twig', [
             'order' => $order,
+            'response' => "Complete your transaction to pay for your order"
         ]);
         
     }

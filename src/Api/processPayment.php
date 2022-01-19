@@ -23,8 +23,8 @@ use FlutterwavePay\FlutterwavePay;
 $URL = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 $getData = $_GET;
 $postData = $_POST;
-$publicKey = $_SERVER['PUBLIC_KEY'];
-$secretKey = $_SERVER['SECRET_KEY'];
+$publicKey = FlutterwavePay:: PUBLIC_KEY;
+$secretKey = FlutterwavePay:: SECRET_KEY;
 if(isset($_POST) && isset($postData['successurl']) && isset($postData['failureurl'])){
     $success_url = $postData['successurl'];
     $failure_url = $postData['failureurl'];
@@ -100,6 +100,7 @@ class myEventHandler implements EventHandlerInterface{
                     session_destroy();
                 }
           }
+          
       }else{
           $this->onFailure($transactionData);
       }
@@ -214,17 +215,18 @@ class processPayment
 
     public function __construct()
     {
+        
         $URL = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
         $getData = $_GET;
         $postData = $_POST;
-        $publicKey = $_SERVER['PUBLIC_KEY'];
-        $secretKey = $_SERVER['SECRET_KEY'];
+        $publicKey = FlutterwavePay:: PUBLIC_KEY;
+        $secretKey = FlutterwavePay:: SECRET_KEY;
         if(isset($_POST) && isset($postData['successurl']) && isset($postData['failureurl'])){
             $success_url = $postData['successurl'];
             $failure_url = $postData['failureurl'];
         }
         
-        $env = $_SERVER['ENV'];
+        $env = FlutterwavePay:: ENVIRONMENT;
         
         if(isset($postData['amount'])){
             $_SESSION['publicKey'] = $publicKey;
@@ -294,7 +296,3 @@ class processPayment
     
     
 }
-
-
-
-?>
