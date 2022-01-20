@@ -13,7 +13,8 @@
         <service id="FlutterwavePay\Storefront\Controller\FlutterwaveController" public="true">
             <argument type="service" id="order.repository"/>
             <argument type="service" id="order_transaction.repository"/>
-            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\SalesChannelContextService"/>
+            
+            <argument type="service" id="Shopware\Storefront\Page\Account\Order\AccountOrderPageLoader"/>
             <call method="setContainer">
                 <argument type="service" id="service_container"/>
             </call>

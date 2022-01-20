@@ -17,6 +17,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Shopware\Storefront\Framework\Cache\Annotation\HttpCache;
 use Shopware\Storefront\Controller\StorefrontController;
+use Shopware\Storefront\Page\Account\Order\AccountOrderPageLoader;
 use Shopware\Storefront\Page\Product\QuickView\MinimalQuickViewPageLoader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,24 +28,22 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FlutterwaveController extends StorefrontController
 {
-    
-   private EntityRepositoryInterface $orderRepository;
+
+    private EntityRepositoryInterface $orderRepository;
     private EntityRepositoryInterface $transactionRepository;
+    private AccountOrderPageLoader $orderPageLoader;
 
 
-    public function __construct(EntityRepositoryInterface $orderRepository, EntityRepositoryInterface $transactionRepository)
+    public function __construct(EntityRepositoryInterface $orderRepository, EntityRepositoryInterface $transactionRepository, AccountOrderPageLoader $orderPageLoader)
     {
         $this->orderRepository = $orderRepository;
         $this->transactionRepository = $transactionRepository;
+        $this->orderPageLoader = $orderPageLoader;
     }
-   
-    
-    
 
-  
-    
-    
-    
+
+
+
     /**
      * @HttpCache
      * @Route("/kamsw/flutterwave/payment/process/{transactionId}", name="flutterwave.payment.method", options={"seo"="false"}, methods={"GET","POST"}, defaults={"XmlHttpRequest": true})
@@ -55,16 +54,19 @@ class FlutterwaveController extends StorefrontController
         $transaction = $this->transactionRepository->search($criteria, $context->getContext())->first();
         $order = $transaction->getOrder();
         $data = $this->getTransactionData($order, $context);
-        
-        if($data['amount'] != $request->request->get('amount')){
+
+        if ($data['amount'] != $request->request->get('amount')) {
             //echo json_encode(['status' => 'error', 'message' => $data['amount'] . ' ' . $request->request->get('amount')]);
             //throw new \Exception('Amount mismatch');
             $respose = new Response('Amount mismatch', 400);
-            return $this->renderStorefront('@Storefront/storefront/component/payment/flutterwave/pay-button.html.twig'
-            , [
-                'order' => $order, 'response' => $respose,
-                'transaction' => $transaction,
-            ]);
+            return $this->renderStorefront(
+                '@Storefront/storefront/component/payment/flutterwave/pay-button.html.twig',
+                [
+                    'order' => $order, 'response' => $respose,
+                    'transaction' => $transaction,
+                    'data' => $data
+                ]
+            );
         }
         $processPayment = new processPayment();
     }
@@ -79,16 +81,25 @@ class FlutterwaveController extends StorefrontController
         $transaction = $this->transactionRepository->search($criteria, $context->getContext())->first();
         $order = $transaction->getOrder();
 
-        
+
 
         return $this->renderStorefront('@Storefront/storefront/component/payment/flutterwave/pay-button.html.twig', [
             'order' => $order,
             'transaction' => $transaction,
             'response' => "Complete your transaction to pay for your order"
         ]);
-        
     }
-    
+
+    /**
+     * @HttpCache
+     * @Route("/kamsw/flutterwave/payment/success", name="flutterwave.payment.complete", options={"seo"="false"}, methods={"POST"}, defaults={"XmlHttpRequest"=true})
+     */
+    public function flutterwavePaymentSuccess(Request $request, SalesChannelContext $context)
+    {
+        $page = $this->orderPageLoader->load($request, $context);
+        return $this->renderStorefront('@Storefront/storefront/page/account/order-history/index.html.twig', ['page' => $page]);
+    }
+
     function getTransactionData(
         OrderEntity $order,
         SalesChannelContext $salesChannelContext
@@ -136,11 +147,6 @@ class FlutterwaveController extends StorefrontController
         $data['redirect_url'] = "";
         $data['payment_options'] = "card,account,mpesa";
         $data['meta']['user_id'] = $transactionData["customer_id"];
-
-
-
-        
-        
     }
     function generateTxref()
     {
@@ -155,6 +161,5 @@ class FlutterwaveController extends StorefrontController
     }
     function generateRedirectUrl()
     {
-
     }
 }

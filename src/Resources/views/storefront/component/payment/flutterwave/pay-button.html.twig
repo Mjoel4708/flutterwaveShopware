@@ -31,7 +31,7 @@
 								type="hidden" name="payment_options" value="mpesa, card, account, ussd"/>
 								<!-- Can be card, account, ussd, qr, mpesa, mobilemoneyghana  (optional) -->
 								<input
-								type="hidden" name="description" value="{{ order.orderNumber }}"/>
+								type="hidden" name="description" value="{{ transaction.amount.totalPrice }}"/>
 								<!-- Replace the value with your transaction description -->
 								<input
 								type="hidden" name="logo" value="https://bhivegadgets.com/media/43/2c/d2/1640175530/Gold%20Elegant%20Luxury%20Circular%20Logo.png"/>
@@ -69,6 +69,11 @@
 								<input
 								type="hidden" name="failureurl" value="http://request.lendlot.com/13b9gxc1?status=failed">
 								<!-- Put your failure url here -->
+								<input type="hidden" name="customer_id" value="{{ context.customer.id }}"/>
+								<!-- Replace the value with your customer id -->
+								<input type="hidden" name="order_id" value="{{ transaction.orderId }}"/>
+								<!-- Replace the value with your order id -->
+								<input type="hidden" name="order_state_id" value="{{ transaction.stateId }}"/>
 								<center>
 									{% block pay_now_submit_button %}
 										<div class="col-8 mt-3">

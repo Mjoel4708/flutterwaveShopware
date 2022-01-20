@@ -69,6 +69,7 @@ class myEventHandler implements EventHandlerInterface{
      * */
     function onInit($initializationData){
         // Save the transaction to your DB.
+        
     }
     
     /**
