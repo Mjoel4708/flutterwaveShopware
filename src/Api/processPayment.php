@@ -217,11 +217,12 @@ class processPayment
     public function __construct()
     {
         
-        $URL = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+        
         $getData = $_GET;
         $postData = $_POST;
         $publicKey = FlutterwavePay:: PUBLIC_KEY;
         $secretKey = FlutterwavePay:: SECRET_KEY;
+        $URL = $postData['successurl'];
         if(isset($_POST) && isset($postData['successurl']) && isset($postData['failureurl'])){
             $success_url = $postData['successurl'];
             $failure_url = $postData['failureurl'];

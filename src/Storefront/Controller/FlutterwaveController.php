@@ -52,13 +52,14 @@ class FlutterwaveController extends StorefrontController
     {
         $criteria = new Criteria([$transactionId]);
         $transaction = $this->transactionRepository->search($criteria, $context->getContext())->first();
-        $order = $transaction->getOrder();
+        $orderId = $transaction->getOrderId();
+        $order = $this->orderRepository->search(new Criteria([$orderId]), $context->getContext())->first();
         $data = $this->getTransactionData($order, $context);
 
         if ($data['amount'] != $request->request->get('amount')) {
             //echo json_encode(['status' => 'error', 'message' => $data['amount'] . ' ' . $request->request->get('amount')]);
             //throw new \Exception('Amount mismatch');
-            $respose = new Response('Amount mismatch', 400);
+            $respose = new Response('Unable to complete the tranaction', Response::HTTP_BAD_REQUEST);
             return $this->renderStorefront(
                 '@Storefront/storefront/component/payment/flutterwave/pay-button.html.twig',
                 [

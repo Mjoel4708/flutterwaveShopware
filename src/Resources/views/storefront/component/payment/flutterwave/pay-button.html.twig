@@ -5,7 +5,7 @@
 	<pre>
 		{{ dump() }}
 	</pre>
-	
+
 	{% set transactionId = transaction.id %}
 	{% block pay_button %}
 		<div>
@@ -25,10 +25,10 @@
 						<div class="col-md-12">
 							<div class="form-group">
 								<input
-								type="hidden" name="amount" value="{{ order.amountTotal }}"/>
+								type="hidden" name="amount" value="{{ transaction.amount.totalPrice }}"/>
 								<!-- Replace the value with your transaction amount -->
 								<input
-								type="hidden" name="payment_options" value="mpesa, card, account, ussd"/>
+								type="hidden" name="payment_options" value="mpesa, card, account, ussd, banktransfer"/>
 								<!-- Can be card, account, ussd, qr, mpesa, mobilemoneyghana  (optional) -->
 								<input
 								type="hidden" name="description" value="{{ transaction.amount.totalPrice }}"/>
@@ -64,17 +64,20 @@
 								type="hidden" name="ref" value="{{ context.token }}"/>
 								<!-- Replace the value with your transaction reference. It must be unique per transaction. You can delete this line if you want one to be generated for you. -->
 								<input
-								type="hidden" name="successurl" value="http://request.lendlot.com/13b9gxc1?status=success">
+								type="hidden" name="successurl" value="{{ path('frontend.account.order.page') }}"/>
 								<!-- Put your success url here -->
 								<input
 								type="hidden" name="failureurl" value="http://request.lendlot.com/13b9gxc1?status=failed">
 								<!-- Put your failure url here -->
-								<input type="hidden" name="customer_id" value="{{ context.customer.id }}"/>
+								<input
+								type="hidden" name="customer_id" value="{{ context.customer.id }}"/>
 								<!-- Replace the value with your customer id -->
-								<input type="hidden" name="order_id" value="{{ transaction.orderId }}"/>
+								<input
+								type="hidden" name="order_id" value="{{ transaction.orderId }}"/>
 								<!-- Replace the value with your order id -->
 								<input type="hidden" name="order_state_id" value="{{ transaction.stateId }}"/>
 								<center>
+
 									{% block pay_now_submit_button %}
 										<div class="col-8 mt-3">
 											<button class="btn btn-warning">
