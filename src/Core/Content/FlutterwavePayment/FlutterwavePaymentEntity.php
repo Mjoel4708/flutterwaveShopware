@@ -203,6 +203,13 @@ class FlutterwavePaymentEntity extends Entity
         $this->status = $status;
     }
     /**
+     * @return string
+     */
+    public function getEnvironment(): string
+    {
+        return $this->environment;
+    }
+    /**
      * @return OrderEntity
      */
     public function getOrder(): OrderEntity
@@ -262,6 +269,27 @@ class FlutterwavePaymentEntity extends Entity
     {   
         $this->stateMachineState = $stateMachineState;
 
+    }
+    public function getData(): array
+    {
+        return[
+            'id' => $this->getId(),
+            'customerId' => $this->getCustomerId(),
+            'orderId' => $this->getOrderId(),
+            'orderTransactionId' => $this->getOrderTransactionId(),
+            'flutterwaveTransactionId' => $this->getFlutterwaveTransactionId(),
+            'amount' => $this->getAmount(),
+            'currency' => $this->getCurrency(),
+            'paymentMethod' => $this->getPaymentMethod(),
+            'status' => $this->getStatus(),
+            'environment' => $this->getEnvironment(),
+            'order' => $this->getOrder(),
+            'customer' => $this->getCustomer(),
+            'orderTransaction' => $this->getOrderTransaction(),
+            'stateMachineState' => $this->getStateMachineState(),
+        ];
+
+        
     }
 
 
