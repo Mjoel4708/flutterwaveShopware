@@ -47,15 +47,15 @@ class FlutterwaveController extends StorefrontController
     
     /**
      * @HttpCache
-     * @Route("/kamsw/flutterwave/payment/process/{orderId}/{transactionId}", name="flutterwave.payment.method", options={"seo"="false"}, methods={"GET","POST"}, defaults={"XmlHttpRequest": true})
+     * @Route("/kamsw/flutterwave/payment/process/{transactionId}", name="flutterwave.payment.method", options={"seo"="false"}, methods={"GET","POST"}, defaults={"XmlHttpRequest": true})
      */
-    public function flutterwavePayment(string $orderId, string $transactionId, Request $request, SalesChannelContext $context)
+    public function flutterwavePayment(string $transactionId, Request $request, SalesChannelContext $context)
     {
-        $criteria = new Criteria([$orderId]);
-        $order = $this->orderRepository->search($criteria, $context->getContext())->first();
-        $transactionCriteria = new Criteria([$transactionId]);
-        $transaction = $this->transactionRepository->search($transactionCriteria, $context->getContext())->first();
+        $criteria = new Criteria([$transactionId]);
+        $transaction = $this->transactionRepository->search($criteria, $context->getContext())->first();
+        $order = $transaction->getOrder();
         $data = $this->getTransactionData($order, $context);
+        
         if($data['amount'] != $request->request->get('amount')){
             //echo json_encode(['status' => 'error', 'message' => $data['amount'] . ' ' . $request->request->get('amount')]);
             //throw new \Exception('Amount mismatch');
@@ -71,15 +71,15 @@ class FlutterwaveController extends StorefrontController
     /**
      * 
      * @HttpCache
-     * @Route("/kamsw/flutterwave/payment/{orderId}/{transactionId}", name="flutterwave.payment.form", options={"seo"="false"}, methods={"GET"}, defaults={"XmlHttpRequest"=true})
+     * @Route("/kamsw/flutterwave/payment/{transactionId}", name="flutterwave.payment.form", options={"seo"="false"}, methods={"GET"}, defaults={"XmlHttpRequest"=true})
      */
-    public function flutterwavePaymentForm(string $orderId, string $transactionId, Request $request, SalesChannelContext $context): Response
+    public function flutterwavePaymentForm(string $transactionId, Request $request, SalesChannelContext $context): Response
     {
-        $orderCriteria = new Criteria([$orderId]);
-        $order = $this->orderRepository->search($orderCriteria, $context->getContext())->first();
+        $criteria = new Criteria([$transactionId]);
+        $transaction = $this->transactionRepository->search($criteria, $context->getContext())->first();
+        $order = $transaction->getOrder();
 
-        $transactionCriteria = new Criteria([$transactionId]);
-        $transaction = $this->transactionRepository->search($transactionCriteria, $context->getContext())->first();
+        
 
         return $this->renderStorefront('@Storefront/storefront/component/payment/flutterwave/pay-button.html.twig', [
             'order' => $order,

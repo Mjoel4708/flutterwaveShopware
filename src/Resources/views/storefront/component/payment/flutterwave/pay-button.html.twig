@@ -5,12 +5,12 @@
 	<pre>
 		{{ dump() }}
 	</pre>
-	{% set id = order.id %}
+	
 	{% set transactionId = transaction.id %}
 	{% block pay_button %}
 		<div>
 
-			<form action="{{ path('flutterwave.payment.method', {'orderId': id, 'transactionId': transactionId}) }}" method="post" id="flutterwavePaymentForm">
+			<form action="{{ path('flutterwave.payment.method', {'transactionId': transactionId}) }}" method="post" id="flutterwavePaymentForm">
 
 				{% block page_account_guest_auth_title %}
 					<h1 class="card-title">
