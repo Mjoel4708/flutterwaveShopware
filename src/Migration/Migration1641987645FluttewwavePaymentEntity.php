@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace FlutterwavePay\Migration;
 
@@ -20,21 +22,35 @@ class Migration1641987645FluttewwavePaymentEntity extends MigrationStep
             `id` BINARY(16) NOT NULL,
             `customer_id` BINARY(16),
             `order_id` BINARY(16) NOT NULL,
-            `transaction_id` VARCHAR(255),
+            `order_transaction_id` BINARY(16) NULL,
+            `flutterwave_transaction_id` VARCHAR(16),
             `created_at` DATETIME(3) NOT NULL,
             `updated_at` DATETIME(3) NULL,
             `payment_method` VARCHAR(255),
-            `amount` DECIMAL(10,2) NOT NULL,
+            `amount` FLOAT NOT NULL,
             `currency` VARCHAR(255) NULL,
-            `exception` VARCHAR(255) NULL,
-            `status` VARCHAR(255) NULL,
-            `environment` VARCHAR(255) NULL
+            `status` VARCHAR(255) NOT NULL,
+            `order_state_id` BINARY(16) NULL,
+            `environment` VARCHAR(255) NULL,
+            PRIMARY KEY (`id`),
+
+            KEY `fk.flutterwave_payment.customer_id` (`customer_id`),
+            KEY `fk.flutterwave_payment.order_id` (`order_id`),
+            KEY `fk.flutterwave_payment.order_state_id` (`order_state_id`),
+            
+
+            CONSTRAINT `fk.flutterwave_payment.customer_id` FOREIGN KEY (`customer_id`)
+                REFERENCES `customer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+            CONSTRAINT `fk.flutterwave_payment.order_id` FOREIGN KEY (`order_id`)
+                REFERENCES `order` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+            CONSTRAINT `fk.flutterwave_payment.order_transaction_id` FOREIGN KEY (`order_transaction_id`)
+                REFERENCES `order_transaction` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+            CONSTRAINT `fk.flutterwave_payment.order_state_id` FOREIGN KEY (`order_state_id`)
+                REFERENCES `state_machine_state` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 SQL;
         $connection->executeStatement($query);
-
-
-            
     }
 
     public function updateDestructive(Connection $connection): void

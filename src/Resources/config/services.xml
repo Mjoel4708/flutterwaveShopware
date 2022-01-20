@@ -17,5 +17,8 @@
                 <argument type="service" id="service_container"/>
             </call>
         </service>
+        <service id="FlutterwavePay\Core\Content\FlutterwavePayment\FlutterwavePaymentDefinition">
+            <tag name="shopware.enity.definition" entity="flutterwave_payment" />
+        </service>
     </services>
 </container>

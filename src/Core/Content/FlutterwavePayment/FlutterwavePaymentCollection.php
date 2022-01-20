@@ -1,8 +1,13 @@
-{% sw_extends '@Storefront/storefront/page/checkout/confirm/index.html.twig' %}
+<?php declare(strict_types=1);
 
-{% block page_checkout_confirm_form_submit %}
+namespace FlutterwavePay\Core\Content\FlutterwavePayment;
 
-<button id="confirmFormSubmit" class="btn btn-primary btn-block btn-lg" form="confirmOrderForm" {% if page.cart.errors.blockOrder %} disabled {% endif %} type="submit">
-    {{ "checkout.confirmSubmit"|trans|sw_sanitize }}
-</button>
-{% endblock %}
+use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
+
+class FluttewavePaymentCollection extends EntityCollection
+{
+    protected function getExpectedClass(): string
+    {
+        return FlutterwavePaymentEntity::class;
+    }
+}
