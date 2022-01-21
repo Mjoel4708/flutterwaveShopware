@@ -13,14 +13,30 @@
 			<form action="{{ path('flutterwave.payment.method', {'transactionId': transactionId}) }}" method="post" id="flutterwavePaymentForm">
 
 				{% block page_account_guest_auth_title %}
-					<h1 class="card-title">
-						{{ response ? response : 'Loading...' }}
-					</h1>
+					<div class="card-title">
+
+						<h3 class="sw-promotion-v2-empty-state-hero__description">
+							{{ response ? response : 'Loading...' }}
+
+						</h3>
+					</div>
+
 				{% endblock %}
 				{% block payment_button_form_csrf %}
 					{{ sw_csrf('flutterwave.payment.method') }}
 				{% endblock %}
 				<div class="card-body">
+					<div class="row">
+						<div class="col-md-6">
+							<h3 class="card-text">
+								<span class="sw-card-title__text">
+									Amount to pay: {{ transaction.amount.totalPrice }} {{ context.currency.isoCode }}
+								</span>
+							</h3>
+						</div>
+					</div>
+
+						</div>
 					<div class="row">
 						<div class="col-md-12">
 							<div class="form-group">
@@ -61,7 +77,7 @@
 								type="hidden" name="pay_button_text" value="Complete Payment"/>
 								<!-- Replace the value with the payment button text you prefer (optional) -->
 								<input
-								type="hidden" name="ref" value="{{ context.token }}"/>
+								type="hidden" name="ref" value="{{ transaction.id }}"/>
 								<!-- Replace the value with your transaction reference. It must be unique per transaction. You can delete this line if you want one to be generated for you. -->
 								<input
 								type="hidden" name="successurl" value="{{ path('frontend.account.order.page') }}"/>
