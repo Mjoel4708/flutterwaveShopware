@@ -7,17 +7,18 @@ namespace FlutterwavePay\Migration;
 use Doctrine\DBAL\Connection;
 use Shopware\Core\Framework\Migration\MigrationStep;
 
-class Migration1641987645FluttewwavePaymentEntity extends MigrationStep
+class Migration1641987648FluttewwavePaymentEntity extends MigrationStep
 {
     public function getCreationTimestamp(): int
     {
-        return 1641987645;
+        return 1641987648;
     }
 
     public function update(Connection $connection): void
     {
         // implement update
         $query = <<< SQL
+        DROP TABLE IF EXISTS `flutterwave_payment`;
         CREATE TABLE IF NOT EXISTS `flutterwave_payment` (
             `id` BINARY(16) NOT NULL,
             `customer_id` BINARY(16),
@@ -50,7 +51,7 @@ class Migration1641987645FluttewwavePaymentEntity extends MigrationStep
 
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 SQL;
-        $connection->executeStatement($query);
+        $connection->executeUpdate($query);
     }
 
     public function updateDestructive(Connection $connection): void

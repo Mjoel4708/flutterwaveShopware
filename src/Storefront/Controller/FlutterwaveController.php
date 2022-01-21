@@ -10,11 +10,13 @@ use FlutterwaveApi\myEventHandler;
 use Flutterwave\Rave;
 use FlutterwaveApi\processPayment;
 use Shopware\Core\Checkout\Cart\Error\Error;
+use Shopware\Core\Checkout\Order\Aggregate\OrderTransaction\OrderTransactionEntity;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Read\EntityReaderInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Routing\Annotation\RouteScope;
+use Shopware\Core\System\StateMachine\Aggregation\StateMachineTransition\StateMachineTransitionActions;
 use Shopware\Storefront\Framework\Cache\Annotation\HttpCache;
 use Shopware\Storefront\Controller\StorefrontController;
 use Shopware\Storefront\Page\Account\Order\AccountOrderPageLoader;
@@ -31,14 +33,23 @@ class FlutterwaveController extends StorefrontController
 
     private EntityRepositoryInterface $orderRepository;
     private EntityRepositoryInterface $transactionRepository;
+    private EntityRepositoryInterface $stateMachineStateRepository;
+    private EntityRepositoryInterface $flutterwavePaymentRepository;
     private AccountOrderPageLoader $orderPageLoader;
 
 
-    public function __construct(EntityRepositoryInterface $orderRepository, EntityRepositoryInterface $transactionRepository, AccountOrderPageLoader $orderPageLoader)
+    public function __construct(
+        EntityRepositoryInterface $orderRepository, 
+        EntityRepositoryInterface $transactionRepository, 
+        EntityRepositoryInterface $flutterwavePaymentRepository,
+        EntityRepositoryInterface $stateMachineStateRepository, 
+        AccountOrderPageLoader $orderPageLoader)
     {
         $this->orderRepository = $orderRepository;
         $this->transactionRepository = $transactionRepository;
         $this->orderPageLoader = $orderPageLoader;
+        $this->flutterwavePaymentRepository = $flutterwavePaymentRepository;
+        $this->stateMachineStateRepository = $stateMachineStateRepository;
     }
 
 
@@ -56,20 +67,21 @@ class FlutterwaveController extends StorefrontController
         $order = $this->orderRepository->search(new Criteria([$orderId]), $context->getContext())->first();
         $data = $this->getTransactionData($order, $context);
 
-        if ($data['amount'] != $request->request->get('amount')) {
+        if (!$request->request->get('amount')) {
             //echo json_encode(['status' => 'error', 'message' => $data['amount'] . ' ' . $request->request->get('amount')]);
             //throw new \Exception('Amount mismatch');
             $respose = new Response('Unable to complete the tranaction', Response::HTTP_BAD_REQUEST);
             return $this->renderStorefront(
                 '@Storefront/storefront/component/payment/flutterwave/pay-button.html.twig',
                 [
-                    'order' => $order, 'response' => $respose,
+                    'order' => $order,
+                    'response' => 'Unable to complete the tranaction',
                     'transaction' => $transaction,
                     'data' => $data
                 ]
             );
         }
-        $processPayment = new processPayment();
+        $processPayment = new processPayment($data['amount']);
     }
     /**
      * 
@@ -80,14 +92,15 @@ class FlutterwaveController extends StorefrontController
     {
         $criteria = new Criteria([$transactionId]);
         $transaction = $this->transactionRepository->search($criteria, $context->getContext())->first();
-        $order = $transaction->getOrder();
+        $orderId = $transaction->getOrderId();
+        $order = $this->orderRepository->search(new Criteria([$orderId]), $context->getContext())->first();
 
-
+        $this->saveFlutterwaveTransaction($order, $transaction, $context);
 
         return $this->renderStorefront('@Storefront/storefront/component/payment/flutterwave/pay-button.html.twig', [
             'order' => $order,
             'transaction' => $transaction,
-            'response' => "Complete your transaction to pay for your order"
+            'response' => "Please pay using the button below to complete your order",
         ]);
     }
 
@@ -160,7 +173,64 @@ class FlutterwaveController extends StorefrontController
         }
         $txref .= $timeStamp;
     }
-    function generateRedirectUrl()
+
+
+    function saveFlutterwaveTransaction(
+        OrderEntity $order,
+        OrderTransactionEntity $orderTransaction,
+        SalesChannelContext $context
+    ): void
     {
+        
+        $shopwarePaymentMethodId = $context->getPaymentMethod()->getId();
+        /** @var CustomerEntity $customer */
+        $customer = $context->getCustomer();
+        $salesChannelId = $context->getSalesChannel()->getId();
+        $transactionData = [
+            'transactionId' => $orderTransaction->getId(),
+            'customerId' => $customer->getId(),
+            'orderId' => $order->getId(),
+            'orderTransactionId' => $orderTransaction->getId(),
+            'flutterwaveTransactionId' => $orderTransaction->getId(),
+            'paymentMethod' => 'mpesa',
+            'amount' => $order->getAmountTotal(),
+            'status' => StateMachineTransitionActions::ACTION_REOPEN,
+            'currency' => $context->getCurrency()->getIsoCode(),
+            'orderStateId' => $orderTransaction->getStateId(),
+            'environment' => 'staging',
+            
+        ];
+
+        $this->flutterwavePaymentRepository->create([$transactionData], $context->getContext());
+
+
+
     }
+    function updateFlutterwaveTransaction(
+        OrderEntity $order,
+        OrderTransactionEntity $orderTransaction,
+        SalesChannelContext $context
+    ): void
+    {
+        $shopwarePaymentMethodId = $context->getPaymentMethod()->getId();
+        /** @var CustomerEntity $customer */
+        $customer = $context->getCustomer();
+        $salesChannelId = $context->getSalesChannel()->getId();
+        $transactionData = [
+            'transactionId' => $orderTransaction->getId(),
+            'customerId' => $customer->getId(),
+            'orderId' => $order->getId(),
+            'orderTransactionId' => $orderTransaction->getId(),
+            'flutterwaveTransactionId' => $orderTransaction->getId(),
+            'paymentMethod' => 'mpesa',
+            'amount' => $order->getAmountTotal(),
+            'status' => StateMachineTransitionActions::ACTION_REOPEN,
+            'currency' => $context->getCurrency()->getIsoCode(),
+            'orderStateId' => $orderTransaction->getStateId(),
+            'environment' => 'staging',
+            
+        ];
+
+        $this->flutterwavePaymentRepository->update([$transactionData], $context->getContext());
+    )
 }

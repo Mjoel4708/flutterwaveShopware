@@ -48,12 +48,12 @@ class FlutterwavePaymentDefinition extends EntityDefinition
                 ->addFlags(new Required()),
             (new FkField('order_transaction_id', 'orderTransactionId', OrderTransactionDefinition::class))
                 ->addFlags(new Required()),
-            (new FkField('order_state_id', 'orderStateId', StateMachineStateDefinition::class))
+            (new FkField('order_state_id', 'orderStateId', StateMachineDefinition::class))
                 ->addFlags(new Required()),
-            (new StringField('fluwtwave_transaction_id', 'flutterwaveTransactionId')),
+            (new StringField('flutterwave_transaction_id', 'flutterwaveTransactionId')),
             (new FloatField('amount', 'amount'))->addFlags(new Required()),
             (new StringField('currency', 'currency'))->addFlags(new Required()),
-            (new StringField('payment_method', 'payment_method'))->addFlags(new Required()),
+            (new StringField('payment_method', 'paymentMethod'))->addFlags(new Required()),
             (new StringField('status', 'status'))->addFlags(new Required()),
             (new StringField('environment', 'environment'))->addFlags(new Required()),
             new CreatedAtField(),

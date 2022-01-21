@@ -54,9 +54,9 @@ if(isset($postData['ref'])){
 $payment = new Rave($_SESSION['secretKey'], $prefix, $overrideRef);
 
 function getURL($url,$data = array()){
-    $urlArr = explode('?',$url);
+    $urlArr = explode('test?',$url);
     $params = array_merge($_GET, $data);
-    $new_query_string = http_build_query($params).'&'.$urlArr[1];
+    $new_query_string = http_build_query($params).'test&'.$urlArr[1];
     $newUrl = $urlArr[0].'?'.$new_query_string;
     return $newUrl;
 };
@@ -86,11 +86,12 @@ class myEventHandler implements EventHandlerInterface{
         // Give value for the transaction
         // Update the transaction to note that you have given value for the transaction
         // You can also redirect to your success page from here
+        
         if($transactionData->status === 'successful'){
           if($transactionData->currency == $_SESSION['currency'] && $transactionData->amount == $_SESSION['amount']){
               
               if($_SESSION['publicKey']){
-                    header('Location: '.getURL($_SESSION['successurl'], array('event' => 'successful')));
+                    header('Location: '.getURL($_SESSION['successurl'], array('event' => 'yessss')));
                     $_SESSION = array();
                     session_destroy();
                 }
@@ -126,6 +127,7 @@ class myEventHandler implements EventHandlerInterface{
      * */
     function onRequery($transactionReference){
         // Do something, anything!
+        echo 'Transaction found great job developer!';
     }
     
     /**
@@ -214,7 +216,7 @@ class processPayment
     protected $encryptionKey;
     protected $env;
 
-    public function __construct()
+    public function __construct(float $amount)
     {
         
         
@@ -256,7 +258,7 @@ class processPayment
             // Make payment
             $payment
             ->eventHandler(new myEventHandler)
-            ->setAmount($postData['amount'])
+            ->setAmount($amount)
             ->setPaymentOptions($postData['payment_options']) // value can be card, account or both
             ->setDescription($postData['description'])
             ->setLogo($postData['logo'])

@@ -7,20 +7,22 @@
         <service id="FlutterwavePay\Service\FlutterwavePayment">
             <argument type="service" id="Shopware\Core\Checkout\Order\Aggregate\OrderTransaction\OrderTransactionStateHandler"/>
             <argument type="service" id="router.default"/>
+            
             <argument type="service" id="Shopware\Core\Content\Seo\SeoUrlPlaceholderHandlerInterface"/>
             <tag name="shopware.payment.method.async" />
         </service>
         <service id="FlutterwavePay\Storefront\Controller\FlutterwaveController" public="true">
             <argument type="service" id="order.repository"/>
             <argument type="service" id="order_transaction.repository"/>
-            
+            <argument type="service" id="flutterwave_payment.repository"/>
+            <argument type="service" id="state_machine_transition.repository"/>
             <argument type="service" id="Shopware\Storefront\Page\Account\Order\AccountOrderPageLoader"/>
             <call method="setContainer">
                 <argument type="service" id="service_container"/>
             </call>
         </service>
         <service id="FlutterwavePay\Core\Content\FlutterwavePayment\FlutterwavePaymentDefinition">
-            <tag name="shopware.enity.definition" entity="flutterwave_payment" />
+            <tag name="shopware.entity.definition" entity="flutterwave_payment" />
         </service>
     </services>
 </container>
