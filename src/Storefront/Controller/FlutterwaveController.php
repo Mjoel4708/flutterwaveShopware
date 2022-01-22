@@ -110,8 +110,8 @@ class FlutterwaveController extends StorefrontController
      */
     public function flutterwavePaymentSuccess(Request $request, SalesChannelContext $context)
     {
-        $page = $this->orderPageLoader->load($request, $context);
-        return $this->renderStorefront('@Storefront/storefront/page/account/order-history/index.html.twig', ['page' => $page]);
+        //$page = $this->orderPageLoader->load($request, $context);
+        return $this->renderStorefront('@Storefront/storefront/page/account/order-history/index.html.twig');
     }
 
     function getTransactionData(
@@ -206,31 +206,20 @@ class FlutterwaveController extends StorefrontController
 
 
     }
+
+    
     function updateFlutterwaveTransaction(
-        OrderEntity $order,
         OrderTransactionEntity $orderTransaction,
         SalesChannelContext $context
     ): void
     {
-        $shopwarePaymentMethodId = $context->getPaymentMethod()->getId();
-        /** @var CustomerEntity $customer */
-        $customer = $context->getCustomer();
-        $salesChannelId = $context->getSalesChannel()->getId();
-        $transactionData = [
-            'transactionId' => $orderTransaction->getId(),
-            'customerId' => $customer->getId(),
-            'orderId' => $order->getId(),
-            'orderTransactionId' => $orderTransaction->getId(),
-            'flutterwaveTransactionId' => $orderTransaction->getId(),
-            'paymentMethod' => 'mpesa',
-            'amount' => $order->getAmountTotal(),
-            'status' => StateMachineTransitionActions::ACTION_REOPEN,
-            'currency' => $context->getCurrency()->getIsoCode(),
-            'orderStateId' => $orderTransaction->getStateId(),
-            'environment' => 'staging',
-            
-        ];
+        $criteria = new Criteria([$orderTransaction->getId()]);
+        $transaction = $this->flutterwavePaymentRepository->search($criteria, $context->getContext())->first();
+        $transaction->setStatus('success');
+        
+        $this->flutterwavePaymentRepository->update([$transaction], $context->getContext());
 
-        $this->flutterwavePaymentRepository->update([$transactionData], $context->getContext());
-    )
+
+    }
+        
 }
