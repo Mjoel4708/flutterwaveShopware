@@ -88,12 +88,16 @@ class FlutterwaveController extends StorefrontController
                 [
                     'order' => $order,
                     'response' => 'Unable to complete the tranaction',
+                    'sediment' => 'fail',
                     'transaction' => $transaction,
                     'data' => $data
                 ]
             );
         }
+        
         $processPayment = new processPayment($data['amount']);
+        
+        return $this->renderStorefront('@Storefront/storefront/page/account/order-history/index.html.twig');
     }
     /**
      * 
@@ -112,18 +116,39 @@ class FlutterwaveController extends StorefrontController
         return $this->renderStorefront('@Storefront/storefront/component/payment/flutterwave/pay-button.html.twig', [
             'order' => $order,
             'transaction' => $transaction,
+            'sediment' => 'neutral',
             'response' => "Please pay using the button below to complete your order",
         ]);
     }
 
     /**
      * @HttpCache
-     * @Route("/kamsw/flutterwave/payment/success", name="flutterwave.payment.complete", options={"seo"="false"}, methods={"POST"}, defaults={"XmlHttpRequest"=true})
+     * @Route("/kamsw/flutterwave/redirect/success/{transactionId}", name="flutterwave.payment.complete", options={"seo"="false"}, methods={"GET"}, defaults={"XmlHttpRequest"=true})
      */
-    public function flutterwavePaymentSuccess(Request $request, SalesChannelContext $context)
+    public function flutterwavePaymentSuccess(string $transactionId, Request $request, SalesChannelContext $context)
     {
-        //$page = $this->orderPageLoader->load($request, $context);
-        return $this->renderStorefront('@Storefront/storefront/page/account/order-history/index.html.twig');
+        $page = $this->orderPageLoader->load($request, $context);
+        $criteria = new Criteria([$transactionId]);
+        $transaction = $this->transactionRepository->search($criteria, $context->getContext())->first();
+        if(!$transaction){
+            throw new \Exception('Transaction not found');
+        }
+        $this->transactionStateHandler->paid($transactionId, $context->getContext());
+        $orderId = $transaction->getOrderId();
+        $order = $this->orderRepository->search(new Criteria([$orderId]), $context->getContext())->first();
+        $this->updateSuccessFlutterwaveTransaction($transaction, $context);
+        if(!$order){
+            throw new \Exception('Order not found');
+        }
+        return $this->redirectToRoute(
+            'frontend.account.order.page',
+            [
+                'redirectTo' => 'frontend.account.order.page',
+                'page' => $page
+
+
+            ]
+        );
     }
 
     function getTransactionData(

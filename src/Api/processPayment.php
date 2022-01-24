@@ -86,8 +86,10 @@ class myEventHandler implements EventHandlerInterface{
         // Give value for the transaction
         // Update the transaction to note that you have given value for the transaction
         // You can also redirect to your success page from here
-        
+        var_dump($transactionData);
         if($transactionData->status === 'successful'){
+
+            
           if($transactionData->currency == $_SESSION['currency'] && $transactionData->amount == $_SESSION['amount']){
               
               if($_SESSION['publicKey']){

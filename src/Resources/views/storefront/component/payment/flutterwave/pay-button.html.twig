@@ -12,14 +12,21 @@
 
 			<form action="{{ path('flutterwave.payment.method', {'transactionId': transactionId}) }}" method="post" id="flutterwavePaymentForm">
 
-				{% block page_account_guest_auth_title %}
-					<div class="card-title">
+				{% block page_account_guest_auth_message %}
 
-						<h3 class="sw-promotion-v2-empty-state-hero__description">
-							{{ response ? response : 'Loading...' }}
+					{% if sediment == 'fail' %}
+						{% sw_include '@Storefront/storefront/utilities/alert.html.twig' with {
+                        		type: "danger",
+                        		content: response
+                    		} %}
+					{% else %}
+						{% sw_include '@Storefront/storefront/utilities/alert.html.twig' with {
+                        		type: "info",
+                        		content: response
+                    		} %}
 
-						</h3>
-					</div>
+					{% endif %}
+
 
 				{% endblock %}
 				{% block payment_button_form_csrf %}
@@ -30,88 +37,90 @@
 						<div class="col-md-6">
 							<h3 class="card-text">
 								<span class="sw-card-title__text">
-									Amount to pay: {{ transaction.amount.totalPrice }} {{ context.currency.isoCode }}
+									Amount to pay:
+									{{ transaction.amount.totalPrice }}
+									{{ context.currency.isoCode }}
 								</span>
 							</h3>
 						</div>
 					</div>
 
-						</div>
-					<div class="row">
-						<div class="col-md-12">
-							<div class="form-group">
-								<input
-								type="hidden" name="amount" value="{{ transaction.amount.totalPrice }}"/>
-								<!-- Replace the value with your transaction amount -->
-								<input
-								type="hidden" name="payment_options" value="mpesa, card, account, ussd, banktransfer"/>
-								<!-- Can be card, account, ussd, qr, mpesa, mobilemoneyghana  (optional) -->
-								<input
-								type="hidden" name="description" value="{{ transaction.amount.totalPrice }}"/>
-								<!-- Replace the value with your transaction description -->
-								<input
-								type="hidden" name="logo" value="https://bhivegadgets.com/media/43/2c/d2/1640175530/Gold%20Elegant%20Luxury%20Circular%20Logo.png"/>
-								<!-- Replace the value with your logo url (optional) -->
-								<input
-								type="hidden" name="title" value="{{ context.salesChannel.name }}"/>
-								<!-- Replace the value with your transaction title (optional) -->
-								<input
-								type="hidden" name="country" value="{{ context.country.iso ? context.country.iso : 'KE' }}"/>
-								<!-- Replace the value with your transaction country -->
-								<input
-								type="hidden" name="currency" value="KES"/>
-								<!-- Replace the value with your transaction currency -->
-								<input
-								type="hidden" name="email" value="{{ context.customer.email }}"/>
-								<!-- Replace the value with your customer email -->
-								<input
-								type="hidden" name="firstname" value="{{ context.customer.firstName }}"/>
-								<!-- Replace the value with your customer firstname (optional) -->
-								<input
-								type="hidden" name="lastname" value="{{ context.customer.lastName }}"/>
-								<!-- Replace the value with your customer lastname (optional) -->
-								<input
-								type="hidden" name="phonenumber" value="{{ context.customer.phoneNumber }}"/>
-								<!-- Replace the value with your customer phonenumber (optional if email is passes) -->
-								<input
-								type="hidden" name="pay_button_text" value="Complete Payment"/>
-								<!-- Replace the value with the payment button text you prefer (optional) -->
-								<input
-								type="hidden" name="ref" value="{{ transaction.id }}"/>
-								<!-- Replace the value with your transaction reference. It must be unique per transaction. You can delete this line if you want one to be generated for you. -->
-								<input
-								type="hidden" name="successurl" value="{{ path('frontend.account.order.page') }}"/>
-								<!-- Put your success url here -->
-								<input
-								type="hidden" name="failureurl" value="http://request.lendlot.com/13b9gxc1?status=failed">
-								<!-- Put your failure url here -->
-								<input
-								type="hidden" name="customer_id" value="{{ context.customer.id }}"/>
-								<!-- Replace the value with your customer id -->
-								<input
-								type="hidden" name="order_id" value="{{ transaction.orderId }}"/>
-								<!-- Replace the value with your order id -->
-								<input type="hidden" name="order_state_id" value="{{ transaction.stateId }}"/>
-								<center>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group">
+							<input
+							type="hidden" name="amount" value="{{ transaction.amount.totalPrice }}"/>
+							<!-- Replace the value with your transaction amount -->
+							<input
+							type="hidden" name="payment_options" value="mpesa, card, account, ussd, banktransfer"/>
+							<!-- Can be card, account, ussd, qr, mpesa, mobilemoneyghana  (optional) -->
+							<input
+							type="hidden" name="description" value="{{ transaction.id }}"/>
+							<!-- Replace the value with your transaction description -->
+							<input
+							type="hidden" name="logo" value="https://bhivegadgets.com/media/43/2c/d2/1640175530/Gold%20Elegant%20Luxury%20Circular%20Logo.png"/>
+							<!-- Replace the value with your logo url (optional) -->
+							<input
+							type="hidden" name="title" value="{{ context.salesChannel.name }}"/>
+							<!-- Replace the value with your transaction title (optional) -->
+							<input
+							type="hidden" name="country" value="{{ context.country.iso ? context.country.iso : 'KE' }}"/>
+							<!-- Replace the value with your transaction country -->
+							<input
+							type="hidden" name="currency" value="KES"/>
+							<!-- Replace the value with your transaction currency -->
+							<input
+							type="hidden" name="email" value="{{ context.customer.email }}"/>
+							<!-- Replace the value with your customer email -->
+							<input
+							type="hidden" name="firstname" value="{{ context.customer.firstName }}"/>
+							<!-- Replace the value with your customer firstname (optional) -->
+							<input
+							type="hidden" name="lastname" value="{{ context.customer.lastName }}"/>
+							<!-- Replace the value with your customer lastname (optional) -->
+							<input
+							type="hidden" name="phonenumber" value="{{ context.customer.phoneNumber }}"/>
+							<!-- Replace the value with your customer phonenumber (optional if email is passes) -->
+							<input
+							type="hidden" name="pay_button_text" value="Complete Payment"/>
+							<!-- Replace the value with the payment button text you prefer (optional) -->
+							<input
+							type="hidden" name="ref" value="{{ transaction.id }}"/>
+							<!-- Replace the value with your transaction reference. It must be unique per transaction. You can delete this line if you want one to be generated for you. -->
+							<input
+							type="hidden" name="successurl" value="{{ path('flutterwave.payment.complete', {'transactionId': transactionId}) }}"/>
+							<!-- Put your success url here -->
+							<input
+							type="hidden" name="failureurl" value="http://request.lendlot.com/13b9gxc1?status=failed">
+							<!-- Put your failure url here -->
+							<input
+							type="hidden" name="customer_id" value="{{ context.customer.id }}"/>
+							<!-- Replace the value with your customer id -->
+							<input
+							type="hidden" name="order_id" value="{{ transaction.orderId }}"/>
+							<!-- Replace the value with your order id -->
+							<input type="hidden" name="order_state_id" value="{{ transaction.stateId }}"/>
+							<center>
 
-									{% block pay_now_submit_button %}
-										<div class="col-8 mt-3">
-											<button class="btn btn-warning">
-												Pay Now
-											</button>
-										</div>
+								{% block pay_now_submit_button %}
+									<div class="col-8 mt-3">
+										<button class="btn btn-warning">
+											Pay Now
+										</button>
+									</div>
 
-									{% endblock %}
-								</center>
+								{% endblock %}
+							</center>
 
-							</div>
 						</div>
 					</div>
+				</div>
 
 
-				</form>
-			</div>
-		{% endblock %}
-
-
+			</form>
+		</div>
 	{% endblock %}
+
+
+{% endblock %}
