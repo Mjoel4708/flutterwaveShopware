@@ -9,8 +9,12 @@ use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use FlutterwaveApi\myEventHandler;
 use Flutterwave\Rave;
 use FlutterwaveApi\processPayment;
+use FlutterwavePay\Service\FlutterwavePayment;
 use Shopware\Core\Checkout\Cart\Error\Error;
 use Shopware\Core\Checkout\Order\Aggregate\OrderTransaction\OrderTransactionEntity;
+use Shopware\Core\Checkout\Order\Aggregate\OrderTransaction\OrderTransactionStateHandler;
+use Shopware\Core\Checkout\Payment\Exception\CustomerCanceledAsyncPaymentException;
+use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Read\EntityReaderInterface;
@@ -35,6 +39,7 @@ class FlutterwaveController extends StorefrontController
     private EntityRepositoryInterface $transactionRepository;
     private EntityRepositoryInterface $stateMachineStateRepository;
     private EntityRepositoryInterface $flutterwavePaymentRepository;
+    private OrderTransactionStateHandler $transactionStateHandler;
     private AccountOrderPageLoader $orderPageLoader;
 
 
@@ -42,7 +47,8 @@ class FlutterwaveController extends StorefrontController
         EntityRepositoryInterface $orderRepository, 
         EntityRepositoryInterface $transactionRepository, 
         EntityRepositoryInterface $flutterwavePaymentRepository,
-        EntityRepositoryInterface $stateMachineStateRepository, 
+        EntityRepositoryInterface $stateMachineStateRepository,
+        OrderTransactionStateHandler $transactionStateHandler,
         AccountOrderPageLoader $orderPageLoader)
     {
         $this->orderRepository = $orderRepository;
@@ -50,6 +56,7 @@ class FlutterwaveController extends StorefrontController
         $this->orderPageLoader = $orderPageLoader;
         $this->flutterwavePaymentRepository = $flutterwavePaymentRepository;
         $this->stateMachineStateRepository = $stateMachineStateRepository;
+        $this->transactionStateHandler = $transactionStateHandler;
     }
 
 
@@ -59,18 +66,25 @@ class FlutterwaveController extends StorefrontController
      * @HttpCache
      * @Route("/kamsw/flutterwave/payment/process/{transactionId}", name="flutterwave.payment.method", options={"seo"="false"}, methods={"GET","POST"}, defaults={"XmlHttpRequest": true})
      */
-    public function flutterwavePayment(string $transactionId, Request $request, SalesChannelContext $context)
+    public function flutterwavePayment(string $transactionId, Request $request, Context $context, SalesChannelContext $salesChannelContext)
     {
         $criteria = new Criteria([$transactionId]);
-        $transaction = $this->transactionRepository->search($criteria, $context->getContext())->first();
+        $transaction = $this->transactionRepository->search($criteria, $context)->first();
         $orderId = $transaction->getOrderId();
-        $order = $this->orderRepository->search(new Criteria([$orderId]), $context->getContext())->first();
-        $data = $this->getTransactionData($order, $context);
+        $order = $this->orderRepository->search(new Criteria([$orderId]), $context)->first();
+        $data = $this->getTransactionData($order, $salesChannelContext);
+
+        
 
         if (!$request->request->get('amount')) {
             //echo json_encode(['status' => 'error', 'message' => $data['amount'] . ' ' . $request->request->get('amount')]);
             //throw new \Exception('Amount mismatch');
             $respose = new Response('Unable to complete the tranaction', Response::HTTP_BAD_REQUEST);
+            $this->transactionStateHandler->cancel($transactionId, $context);
+            // throw new CustomerCanceledAsyncPaymentException(
+            //     $transactionId,
+            //     "Customer canceled the payment on flutterwave"
+            // );
             return $this->renderStorefront(
                 '@Storefront/storefront/component/payment/flutterwave/pay-button.html.twig',
                 [
@@ -88,15 +102,15 @@ class FlutterwaveController extends StorefrontController
      * @HttpCache
      * @Route("/kamsw/flutterwave/payment/{transactionId}", name="flutterwave.payment.form", options={"seo"="false"}, methods={"GET"}, defaults={"XmlHttpRequest"=true})
      */
-    public function flutterwavePaymentForm(string $transactionId, Request $request, SalesChannelContext $context): Response
+    public function flutterwavePaymentForm(string $transactionId, Request $request, Context $context, SalesChannelContext $salesChannelContext): Response
     {
         $criteria = new Criteria([$transactionId]);
-        $transaction = $this->transactionRepository->search($criteria, $context->getContext())->first();
+        $transaction = $this->transactionRepository->search($criteria, $context)->first();
         $orderId = $transaction->getOrderId();
-        $order = $this->orderRepository->search(new Criteria([$orderId]), $context->getContext())->first();
+        $order = $this->orderRepository->search(new Criteria([$orderId]), $context)->first();
 
-        $this->saveFlutterwaveTransaction($order, $transaction, $context);
-
+        $this->saveFlutterwaveTransaction($order, $transaction, $salesChannelContext);
+        $this->transactionStateHandler->processUnconfirmed($transactionId, $context);
         return $this->renderStorefront('@Storefront/storefront/component/payment/flutterwave/pay-button.html.twig', [
             'order' => $order,
             'transaction' => $transaction,
