@@ -19,6 +19,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Read\EntityReaderInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Shopware\Core\System\StateMachine\Aggregation\StateMachineTransition\StateMachineTransitionActions;
 use Shopware\Storefront\Framework\Cache\Annotation\HttpCache;
@@ -81,10 +82,7 @@ class FlutterwaveController extends StorefrontController
             //throw new \Exception('Amount mismatch');
             $respose = new Response('Unable to complete the tranaction', Response::HTTP_BAD_REQUEST);
             $this->transactionStateHandler->cancel($transactionId, $context);
-            // throw new CustomerCanceledAsyncPaymentException(
-            //     $transactionId,
-            //     "Customer canceled the payment on flutterwave"
-            // );
+            $this->updateFailedFlutterwaveTransaction($transaction, $salesChannelContext);
             return $this->renderStorefront(
                 '@Storefront/storefront/component/payment/flutterwave/pay-button.html.twig',
                 [
@@ -216,24 +214,55 @@ class FlutterwaveController extends StorefrontController
         ];
 
         $this->flutterwavePaymentRepository->create([$transactionData], $context->getContext());
+        
 
 
 
     }
 
     
-    function updateFlutterwaveTransaction(
+    function updateSuccessFlutterwaveTransaction(
         OrderTransactionEntity $orderTransaction,
         SalesChannelContext $context
     ): void
     {
         $criteria = new Criteria([$orderTransaction->getId()]);
         $transaction = $this->flutterwavePaymentRepository->search($criteria, $context->getContext())->first();
-        $transaction->setStatus('success');
+        $transaction->setStatus(StateMachineTransitionActions::ACTION_PAID);
         
         $this->flutterwavePaymentRepository->update([$transaction], $context->getContext());
 
 
     }
+    function updateFailedFlutterwaveTransaction(
+        OrderTransactionEntity $orderTransaction,
+        SalesChannelContext $context
+    ): void
+    {
+        $criteria = new Criteria();
+        $criteria->addFilter(new EqualsFilter('orderTransactionId', $orderTransaction->getId()));
+        $transaction = $this->flutterwavePaymentRepository->search($criteria, $context->getContext())->first();
+        
+        if($transaction)
+        {
+            try{
+                $transaction->setStatus(StateMachineTransitionActions::ACTION_FAIL);
+                
+                $this->flutterwavePaymentRepository->update([$transaction->getData()], $context->getContext()::createDefaultContext());
+                
+            }
+            catch(\Exception $e)
+            {
+                //$this->logger->error($e->getMessage());
+                throw new \Exception($e->getMessage() . "Unable to update transaction status" . gettype($transaction->getData()));
+            }
+            
+        }
+       else{
+           throw new \Exception("Transaction not found");
+       }
+
+    }
+    
         
 }

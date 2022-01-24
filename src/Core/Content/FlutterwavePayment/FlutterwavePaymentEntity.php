@@ -210,6 +210,19 @@ class FlutterwavePaymentEntity extends Entity
         return $this->environment;
     }
     /**
+     * @param string $orderStateId
+     * 
+     */
+    public function setOrderStateId(string $orderStateId){
+        $this->orderStateId = $orderStateId;
+    }
+    /**
+     * @return orderStateId
+     */
+    public function getOrderStateId(){
+        return $this->orderStateId;
+    }
+    /**
      * @return OrderEntity
      */
     public function getOrder(): OrderEntity
@@ -283,10 +296,9 @@ class FlutterwavePaymentEntity extends Entity
             'paymentMethod' => $this->getPaymentMethod(),
             'status' => $this->getStatus(),
             'environment' => $this->getEnvironment(),
-            'order' => $this->getOrder(),
             'customer' => $this->getCustomer(),
-            'orderTransaction' => $this->getOrderTransaction(),
-            'stateMachineState' => $this->getStateMachineState(),
+            'orderStateId' => $this->getOrderStateId(),
+            'status' => $this->getStatus(),
         ];
 
         

@@ -9,7 +9,7 @@ use FlutterwavePay\Core\Content\FlutterwavePayment\FlutterwavePaymentEntity;
 
 /**
  * @method void                                                                 add(FlutterwavePaymentEntity $entity)
- * @method void set(string $key, FlutterwavePaymentEntity $entity)
+ * @method void                                                                 set(string $key, FlutterwavePaymentEntity $entity)
  * @method FlutterwavePaymentEntity[]                                          getIterator()
  * @method FlutterwavePaymentEntity[]                                          getElements()
  * @method FlutterwavePaymentEntity|null                                       get(string $key)

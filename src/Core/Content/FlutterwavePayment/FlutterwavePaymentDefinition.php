@@ -86,6 +86,7 @@ class FlutterwavePaymentDefinition extends EntityDefinition
                 true
             ),
 
+          
         ]);
     }
 }
