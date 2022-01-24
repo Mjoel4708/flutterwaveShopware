@@ -57,9 +57,11 @@ class FlutterwavePayment implements AsynchronousPaymentHandlerInterface
     public function finalize(AsyncPaymentTransactionStruct $transaction, Request $request, SalesChannelContext $salesChannelContext): void
     {
         $transactionId = $transaction->getOrderTransaction()->getId();
+        $getData = $_GET;
+        $postData = $_POST;
 
         // Check if the user cancelled. Might differ for each payment provider
-        if ($request->query->getBoolean('cancel')) {
+        if (isset($getData['cancelled'])) {
             throw new CustomerCanceledAsyncPaymentException(
                 $transactionId,
                 'Customer canceled the payment on the PayPal page'
@@ -70,7 +72,7 @@ class FlutterwavePayment implements AsynchronousPaymentHandlerInterface
         $paymentState = $request->query->getAlpha('status');
 
         $context = $salesChannelContext->getContext();
-        if ($paymentState === 'completed') {
+        if (isset($getData['tx_ref'])) {
             // Payment completed, set transaction status to "paid"
             $this->transactionStateHandler->paid($transaction->getOrderTransaction()->getId(), $context);
         } else {
@@ -81,9 +83,10 @@ class FlutterwavePayment implements AsynchronousPaymentHandlerInterface
 
     private function sendReturnUrlToExternalGateway(AsyncPaymentTransactionStruct $transaction, string $getReturnUrl): string
     {
-        $order = $transaction->getOrder();
-        $orderId = $order->getId();
-        $paymentProviderUrl =  $this->router->generate('flutterwave.payment.form', ['orderId' => $orderId], UrlGeneratorInterface::ABSOLUTE_URL);
+        
+        $transactionId = $transaction->getOrderTransaction()->getId();
+        
+        $paymentProviderUrl =  $this->router->generate('flutterwave.payment.form', ['transactionId' => $transactionId], UrlGeneratorInterface::ABSOLUTE_URL);
         
         
 
