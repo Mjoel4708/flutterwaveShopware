@@ -45,13 +45,13 @@ class FlutterwaveController extends StorefrontController
 
 
     public function __construct(
-        EntityRepositoryInterface $orderRepository, 
-        EntityRepositoryInterface $transactionRepository, 
+        EntityRepositoryInterface $orderRepository,
+        EntityRepositoryInterface $transactionRepository,
         EntityRepositoryInterface $flutterwavePaymentRepository,
         EntityRepositoryInterface $stateMachineStateRepository,
         OrderTransactionStateHandler $transactionStateHandler,
-        AccountOrderPageLoader $orderPageLoader)
-    {
+        AccountOrderPageLoader $orderPageLoader
+    ) {
         $this->orderRepository = $orderRepository;
         $this->transactionRepository = $transactionRepository;
         $this->orderPageLoader = $orderPageLoader;
@@ -75,7 +75,7 @@ class FlutterwaveController extends StorefrontController
         $order = $this->orderRepository->search(new Criteria([$orderId]), $context)->first();
         $data = $this->getTransactionData($order, $salesChannelContext);
 
-        
+
 
         if (!$request->request->get('amount')) {
             //echo json_encode(['status' => 'error', 'message' => $data['amount'] . ' ' . $request->request->get('amount')]);
@@ -191,9 +191,8 @@ class FlutterwaveController extends StorefrontController
         OrderEntity $order,
         OrderTransactionEntity $orderTransaction,
         SalesChannelContext $context
-    ): void
-    {
-        
+    ): void {
+
         $shopwarePaymentMethodId = $context->getPaymentMethod()->getId();
         /** @var CustomerEntity $customer */
         $customer = $context->getCustomer();
@@ -210,59 +209,63 @@ class FlutterwaveController extends StorefrontController
             'currency' => $context->getCurrency()->getIsoCode(),
             'orderStateId' => $orderTransaction->getStateId(),
             'environment' => 'staging',
-            
+
         ];
 
         $this->flutterwavePaymentRepository->create([$transactionData], $context->getContext());
-        
-
-
-
     }
 
-    
+
     function updateSuccessFlutterwaveTransaction(
         OrderTransactionEntity $orderTransaction,
         SalesChannelContext $context
-    ): void
-    {
-        $criteria = new Criteria([$orderTransaction->getId()]);
+    ): void {
+        $criteria = new Criteria();
+        $criteria->addFilter(new EqualsFilter('orderTransactionId', $orderTransaction->getId()));
         $transaction = $this->flutterwavePaymentRepository->search($criteria, $context->getContext())->first();
         $transaction->setStatus(StateMachineTransitionActions::ACTION_PAID);
-        
-        $this->flutterwavePaymentRepository->update([$transaction], $context->getContext());
-
-
+        if(!$transaction){
+            throw new \Exception("Transaction not found");
+        }
+        try {
+            //code...
+            $transaction->setStatus(StateMachineTransitionActions::ACTION_FAIL);
+            $flutterwavePaymentRepositoryId = $this->flutterwavePaymentRepository->searchIds($criteria, $context->getContext())->firstId();
+            $updateData = [
+                'id' => $flutterwavePaymentRepositoryId,
+                'status' => StateMachineTransitionActions::ACTION_PAID,
+                'orderStateId' => $orderTransaction->getStateId()
+            ];
+            $this->flutterwavePaymentRepository->update([$updateData], $context->getContext());
+        } catch (\Throwable $th) {
+            //throw $th;
+            throw new \Exception("Error Processing Request", 1);
+        }
     }
     function updateFailedFlutterwaveTransaction(
         OrderTransactionEntity $orderTransaction,
         SalesChannelContext $context
-    ): void
-    {
+    ): void {
         $criteria = new Criteria();
         $criteria->addFilter(new EqualsFilter('orderTransactionId', $orderTransaction->getId()));
         $transaction = $this->flutterwavePaymentRepository->search($criteria, $context->getContext())->first();
-        
-        if($transaction)
-        {
-            try{
-                $transaction->setStatus(StateMachineTransitionActions::ACTION_FAIL);
-                
-                $this->flutterwavePaymentRepository->update([$transaction->getData()], $context->getContext()::createDefaultContext());
-                
-            }
-            catch(\Exception $e)
-            {
-                //$this->logger->error($e->getMessage());
-                throw new \Exception($e->getMessage() . "Unable to update transaction status" . gettype($transaction->getData()));
-            }
-            
-        }
-       else{
-           throw new \Exception("Transaction not found");
-       }
 
+        if ($transaction) {
+            try {
+                $transaction->setStatus(StateMachineTransitionActions::ACTION_FAIL);
+                $flutterwavePaymentRepositoryId = $this->flutterwavePaymentRepository->searchIds($criteria, $context->getContext())->firstId();
+                $updateData = [
+                    'id' => $flutterwavePaymentRepositoryId,
+                    'status' => StateMachineTransitionActions::ACTION_CANCEL,
+                    'orderStateId' => $orderTransaction->getStateId()
+                ];
+                $this->flutterwavePaymentRepository->update([$updateData], $context->getContext());
+            } catch (\Exception $e) {
+                //$this->logger->error($e->getMessage());
+                throw new \Exception($e->getMessage() . "Unable to update transaction status " . $transaction->getId());
+            }
+        } else {
+            throw new \Exception("Transaction not found");
+        }
     }
-    
-        
 }
