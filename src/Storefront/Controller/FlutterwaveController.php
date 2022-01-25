@@ -9,6 +9,7 @@ use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use FlutterwaveApi\myEventHandler;
 use Flutterwave\Rave;
 use FlutterwaveApi\processPayment;
+use FlutterwavePay\FlutterwavePay;
 use FlutterwavePay\Service\FlutterwavePayment;
 use Shopware\Core\Checkout\Cart\Error\Error;
 use Shopware\Core\Checkout\Order\Aggregate\OrderTransaction\OrderTransactionEntity;
@@ -22,6 +23,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Shopware\Core\System\StateMachine\Aggregation\StateMachineTransition\StateMachineTransitionActions;
+use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Shopware\Storefront\Framework\Cache\Annotation\HttpCache;
 use Shopware\Storefront\Controller\StorefrontController;
 use Shopware\Storefront\Page\Account\Order\AccountOrderPageLoader;
@@ -50,6 +52,7 @@ class FlutterwaveController extends StorefrontController
         EntityRepositoryInterface $flutterwavePaymentRepository,
         EntityRepositoryInterface $stateMachineStateRepository,
         OrderTransactionStateHandler $transactionStateHandler,
+        SystemConfigService $systemConfigService,
         AccountOrderPageLoader $orderPageLoader
     ) {
         $this->orderRepository = $orderRepository;
@@ -58,6 +61,7 @@ class FlutterwaveController extends StorefrontController
         $this->flutterwavePaymentRepository = $flutterwavePaymentRepository;
         $this->stateMachineStateRepository = $stateMachineStateRepository;
         $this->transactionStateHandler = $transactionStateHandler;
+        $this->systemConfigService = $systemConfigService;
     }
 
 
@@ -87,7 +91,7 @@ class FlutterwaveController extends StorefrontController
                 '@Storefront/storefront/component/payment/flutterwave/pay-button.html.twig',
                 [
                     'order' => $order,
-                    'response' => 'Unable to complete the tranaction',
+                    'response' => 'Unable to complete the tranaction. Please try again',
                     'sediment' => 'fail',
                     'transaction' => $transaction,
                     'data' => $data
@@ -233,7 +237,7 @@ class FlutterwaveController extends StorefrontController
             'status' => StateMachineTransitionActions::ACTION_REOPEN,
             'currency' => $context->getCurrency()->getIsoCode(),
             'orderStateId' => $orderTransaction->getStateId(),
-            'environment' => 'staging',
+            'environment' => $this->systemConfigService->get(FlutterwavePay:: ENVIRONMENT) ? $this->systemConfigService->get(FlutterwavePay:: ENVIRONMENT) : 'staging',
 
         ];
 

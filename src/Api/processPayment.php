@@ -224,8 +224,8 @@ class processPayment
         
         $getData = $_GET;
         $postData = $_POST;
-        $publicKey = FlutterwavePay:: PUBLIC_KEY;
-        $secretKey = FlutterwavePay:: SECRET_KEY;
+        $publicKey = $_ENV['PUBLIC_KEY'];
+        $secretKey = $_ENV['SECRET_KEY'];
         $URL = $postData['successurl'];
         if(isset($_POST) && isset($postData['successurl']) && isset($postData['failureurl'])){
             $success_url = $postData['successurl'];
