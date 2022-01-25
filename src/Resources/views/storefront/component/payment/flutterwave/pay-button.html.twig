@@ -2,9 +2,9 @@
 
 {% block base_content %}
 	{{ parent() }}
-	<pre>
-		{{ dump() }}
-	</pre>
+	{# <pre>
+			{{ dump() }}
+		</pre> #}
 
 	{% set transactionId = transaction.id %}
 	{% block pay_button %}
@@ -33,16 +33,14 @@
 					{{ sw_csrf('flutterwave.payment.method') }}
 				{% endblock %}
 				<div class="card-body">
-					<div class="row">
-						<div class="col-md-6">
-							<h3 class="card-text">
-								<span class="sw-card-title__text">
-									Amount to pay:
-									{{ transaction.amount.totalPrice }}
-									{{ context.currency.isoCode }}
-								</span>
-							</h3>
+					<div class="row justify-content-md-center">
+						<div class="col-md-4">
+							<span>
+								<img src="https://cdn.worldvectorlogo.com/logos/flutterwave-1.svg" alt="{{ context.paymentMethod.name }}" width="100%" height="100%">
+							</span>
 						</div>
+						
+						
 					</div>
 
 				</div>
@@ -59,7 +57,7 @@
 							type="hidden" name="description" value="{{ transaction.id }}"/>
 							<!-- Replace the value with your transaction description -->
 							<input
-							type="hidden" name="logo" value="https://bhivegadgets.com/media/43/2c/d2/1640175530/Gold%20Elegant%20Luxury%20Circular%20Logo.png"/>
+							type="hidden" name="logo" value="https://assets.shopware.com/media/logos/shopware_logo_blue.svg"/>
 							<!-- Replace the value with your logo url (optional) -->
 							<input
 							type="hidden" name="title" value="{{ context.salesChannel.name }}"/>
@@ -105,7 +103,7 @@
 
 								{% block pay_now_submit_button %}
 									<div class="col-8 mt-3">
-										<button class="btn btn-warning">
+										<button class="btn btn-lg btn-warning">
 											Pay Now
 										</button>
 									</div>

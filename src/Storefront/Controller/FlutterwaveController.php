@@ -117,7 +117,7 @@ class FlutterwaveController extends StorefrontController
             'order' => $order,
             'transaction' => $transaction,
             'sediment' => 'neutral',
-            'response' => "Please pay using the button below to complete your order",
+            'response' => "Click the pay now button to complete the transaction",
         ]);
     }
 
