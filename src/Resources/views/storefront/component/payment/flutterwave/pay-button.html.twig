@@ -2,9 +2,9 @@
 
 {% block base_content %}
 	{{ parent() }}
-	{# <pre>
+	 <pre>
 			{{ dump() }}
-		</pre> #}
+		</pre> 
 
 	{% set transactionId = transaction.id %}
 	{% block pay_button %}
@@ -66,7 +66,7 @@
 							type="hidden" name="country" value="{{ context.country.iso ? context.country.iso : 'KE' }}"/>
 							<!-- Replace the value with your transaction country -->
 							<input
-							type="hidden" name="currency" value="KES"/>
+							type="hidden" name="currency" value="{{ context.currency.isoCode }}"/>
 							<!-- Replace the value with your transaction currency -->
 							<input
 							type="hidden" name="email" value="{{ context.customer.email }}"/>

@@ -1,0 +1,1 @@
+import "./Module/flutterwave-payment-module";

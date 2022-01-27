@@ -1,0 +1,54 @@
+{% block transaction_list %}
+	<sw-page class="flutterwave-transaction-list">
+		<template slot="smart-bar-header">
+			<h2>
+				{% block transaction_list_smart_bar_header_title_text %}
+					{{ $tc('list.textBlogOverview') }}
+				{% endblock %}
+				{% block transaction_list_smart_bar_header_amount %}
+					<span v-if="!isLoading" class="sw-page__smart-bar-amount">
+						({{ total }})
+					</span>
+				{% endblock %}
+			</h2>
+		</template>
+		<template slot="content">
+			{% block transaction_list_content %}
+				<paynl-transactions-list v-if="transactions" :items="transactions" :repository="repository" :showactions="false" :showsettings="false" :showselection="false" :allowcolumnedit="false" :sortisallowed="true" :columns="columns">
+
+					<template slot="column-links" slot-scope="{item}">
+						<a target="_blank" class="sw-data-grid__cell-value" href="https://dashboard.flutterwave.com/">
+							<sw-icon name="default-web-link" color="#1abc9c"></sw-icon>
+						</a>
+						<router-link v-if="isUserCustomersViewer" class="sw-data-grid__cell-value" :to="{ name: 'sw.customer.detail.base', params: { id: item.customerId } }">
+							<sw-icon name="default-avatar-single" color="#fc427b"></sw-icon>
+						</router-link>
+						<router-link v-if="isUserOrdersViewer" class="sw-data-grid__cell-value" :to="{ name: 'sw.order.detail.base', params: { id: item.orderId }}">
+							<sw-icon name="default-shopping-basket" color="#3498db"></sw-icon>
+						</router-link>
+					</template>
+
+					<template slot="column-customer.lastName" slot-scope="{item}">
+						{{ item.customer.lastName }}
+						{{ item.customer.firstName }}
+					</template>
+
+					<template slot="column-status" slot-scope="{ item }">
+						<sw-label :variant="getVariantFromPaymentState(item.stateMachineState.technicalName)" appearance="pill">
+							{{ item.stateMachineState.name }}
+						</sw-label>
+					</template>
+
+					<template slot="column-updatedAt" slot-scope="{ item }">
+						{{ getData(item.updatedAt) }}
+					</template>
+
+					<template slot="column-createdAt" slot-scope="{ item }">
+						{{ getData(item.createdAt) }}
+					</template>
+
+				</paynl-transactions-list>
+			{% endblock %}
+		</template>
+	</sw-page>
+{% endblock %}
