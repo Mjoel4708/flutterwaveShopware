@@ -1,4 +1,5 @@
 import template from './flutterwave-list.html.twig';
+import './flutterwave-list.scss'
 
 const { Component } = Shopware;
 const { Criteria } = Shopware.Data;
@@ -16,6 +17,9 @@ Component.register('flutterwave-transactions-list', {
         return {
             repository: null,
             transactions: null,
+            isLoading: true,
+            total: 0,
+            currentLanguageId: Shopware.Context.api.languageId,
             isUserCustomersViewer: this.isUserCustomersViewer(),
             isUserOrdersViewer: this.isUserOrdersViewer(),
         };
@@ -95,6 +99,7 @@ Component.register('flutterwave-transactions-list', {
     },
 
     created() {
+        this.isLoading = true
         this.repository = this.repositoryFactory.create('flutterwave_payment');
         let criteria = new Criteria();
         criteria.addAssociation('order');
@@ -108,7 +113,10 @@ Component.register('flutterwave-transactions-list', {
             .search(criteria, Shopware.Context.api)
             .then((result) => {
                 this.transactions = result;
+                this.total = result.total;
+                this.isLoading = false;
             });
+        
     },
 
     methods: {
@@ -117,8 +125,13 @@ Component.register('flutterwave-transactions-list', {
                 'order_transaction.state', technicalName
             ).variant;
         },
-
+        
+        changeLanguage(newLanguageId) {
+            this.currentLanguageId = newLanguageId;
+            
+        },
         getData(date) {
+
             if (date <= 0) {
                 return '';
             }

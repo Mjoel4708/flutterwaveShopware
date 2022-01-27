@@ -3,8 +3,8 @@
 $sw-transaction-list-color-error: $color-crimson-500;
 $sw-transaction-list-color-success: $color-emerald-500;
 
-.sw-transaction-list {
-    .sw-transaction-list__content {
+.flutter-transaction-list {
+    .flutterwave-transaction-list__content {
         width: 100%;
         height: 100%;
         position: absolute;
@@ -18,7 +18,7 @@ $sw-transaction-list-color-success: $color-emerald-500;
         color: $sw-transaction-list-color-success;
     }
 
-    .sw-transaction-list__metadata-transaction-guest-label {
+    .flutterwave-transaction-list__metadata-transaction-guest-label {
         margin: 0 0 0 12px;
         text-align: center;
     }

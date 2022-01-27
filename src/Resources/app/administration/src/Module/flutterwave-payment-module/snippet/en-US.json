@@ -1,10 +1,10 @@
 {
     "module": {
-        "name": "PAY. transactions list",
-        "title": "PAY. transactions list",
+        "name": "Flutterwave Payment",
+        "title": "Flutterwave transactions list",
         "description": "PAY. transactions list",
         "navigation": {
-            "label": "PAY. transactions"
+            "label": "Flutterwave transactions"
         }
     },
     "list": {

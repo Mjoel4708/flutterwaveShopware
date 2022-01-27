@@ -1,14 +1,14 @@
 {
     "module": {
-        "name": "PAY. transactions list",
-        "title": "PAY. transactions list",
+        "name": "Flutterwave Payment",
+        "title": "Flutterwave Payment Transactions",
         "description": "PAY. transactions list",
         "navigation": {
-            "label": "PAY. transactions"
+            "label": "Flutterwave transactions"
         }
     },
     "list": {
-        "textTransactionOverview": "Blog entries",
+        "textTransactionOverview": "Flutterwave payment entries",
         "buttonAddBlogEntry": "Create new transaction entry",
         "messageEmpty": "No transactions entries ...",
         "table": {

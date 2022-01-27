@@ -3,7 +3,7 @@
 		<template slot="smart-bar-header">
 			<h2>
 				{% block transaction_list_smart_bar_header_title_text %}
-					{{ $tc('list.textBlogOverview') }}
+					{{ $tc('list.textTransactionOverview') }}
 				{% endblock %}
 				{% block transaction_list_smart_bar_header_amount %}
 					<span v-if="!isLoading" class="sw-page__smart-bar-amount">
@@ -12,10 +12,23 @@
 				{% endblock %}
 			</h2>
 		</template>
-		<template slot="content">
-			{% block transaction_list_content %}
-				<paynl-transactions-list v-if="transactions" :items="transactions" :repository="repository" :showactions="false" :showsettings="false" :showselection="false" :allowcolumnedit="false" :sortisallowed="true" :columns="columns">
+		<template #language-switch>
+			<sw-language-switch @on-change="changeLanguage"></sw-language-switch>
+		</template>
+		
+	{% endblock %}
 
+	<template #sidebar>
+		<sas-blog-vertical-tabs/>
+	</template>
+
+	
+
+	<template #content>
+		{% block flutterwave_list_content %}
+			<sw-entity-listing v-if="transactions" :items="transactions" :repository="repository" :showselection="false" :columns="columns" allowcolumnedit="false" sortisallowed="true">
+
+				{% block flutterwave_list_grid_columns_links %}
 					<template slot="column-links" slot-scope="{item}">
 						<a target="_blank" class="sw-data-grid__cell-value" href="https://dashboard.flutterwave.com/">
 							<sw-icon name="default-web-link" color="#1abc9c"></sw-icon>
@@ -27,28 +40,19 @@
 							<sw-icon name="default-shopping-basket" color="#3498db"></sw-icon>
 						</router-link>
 					</template>
+				{% endblock %}
 
-					<template slot="column-customer.lastName" slot-scope="{item}">
-						{{ item.customer.lastName }}
-						{{ item.customer.firstName }}
-					</template>
+				{% block flutterwave_list_grid_columns_transactions %}{% endblock %}
 
-					<template slot="column-status" slot-scope="{ item }">
-						<sw-label :variant="getVariantFromPaymentState(item.stateMachineState.technicalName)" appearance="pill">
-							{{ item.stateMachineState.name }}
-						</sw-label>
-					</template>
+			</sw-entity-listing>
+		{% endblock %}
 
-					<template slot="column-updatedAt" slot-scope="{ item }">
-						{{ getData(item.updatedAt) }}
-					</template>
+		{% block sas_blog_list_empty_state %}
+			<sw-empty-state v-if="!isLoading && !total" :title="$tc('list.messageEmpty')">
+				{{ $tc('sas-blog-author.list.messageEmpty') }}
+			</sw-empty-state>
+		{% endblock %}
+	</template>
 
-					<template slot="column-createdAt" slot-scope="{ item }">
-						{{ getData(item.createdAt) }}
-					</template>
 
-				</paynl-transactions-list>
-			{% endblock %}
-		</template>
-	</sw-page>
-{% endblock %}
+</sw-page>

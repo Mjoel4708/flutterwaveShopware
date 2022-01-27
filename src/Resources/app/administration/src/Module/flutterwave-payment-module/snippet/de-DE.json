@@ -1,37 +1,37 @@
 {
     "module": {
-        "name": "PAY. transactions list",
-        "title": "PAY. transactions list",
-        "description": "PAY. transactions list",
+        "name": "Flutterwave Zahlung",
+        "title": "Flutterwave Zahlungsverkehr",
+        "description": "Flutterwave Zahlungsverkehr",
         "navigation": {
-            "label": "PAY. transactions"
+            "label": "Zahlungsverkehr"
         }
     },
     "list": {
-        "textTransactionOverview": "Blog entries",
-        "buttonAddBlogEntry": "Create new transaction entry",
-        "messageEmpty": "No transactions entries ...",
+        "textTransactionOverview": "Zahlungsverkehr",
+        "buttonAddBlogEntry": "Zahlung hinzufügen",
+        "messageEmpty": "Keine Zahlungen vorhanden",
         "table": {
-            "title": "Title",
-            "active": "Active",
-            "transaction": "Transaction"
+            "title": "Titel",
+            "active": "Aktiv",
+            "transaction": "Zahlungsverkehr"
         }
     },
     "order": {
         "transaction": {
-            "paid": "Paid (Capture)",
-            "cancelled": "Cancelled (Void)"
+            "paid": "Bezahlt",
+            "cancelled": "Abgebrochen"
         }
     },
     "transactions-list": {
-        "flutterwave_transaction_id": "Transaction ID",
-        "payment_id": "Payment ID",
-        "amount": "Amount",
-        "created_at": "Created at",
-        "updated_at": "Updated at",
-        "order_number": "Order number",
-        "customer": "Customer",
-        "status": "Transaction status",
+        "flutterwave_transaction_id": "Flutterwave Transaktions-ID",
+        "payment_id": "Zahlungs-ID",
+        "amount": "Betrag",
+        "created_at": "Erstellt am",
+        "updated_at": "Aktualisiert am",
+        "order_number": "Bestellnummer",
+        "customer": "Kunde",
+        "status": "Status",
         "links": "Links"
     }
 }

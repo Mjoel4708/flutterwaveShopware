@@ -15,19 +15,20 @@ Shopware.Module.register('flutterwave-payment-module', {
   description: 'module.description',
   icon: 'default-object-address',
   color: '#00bcd4',
-  version: '1.0.0',
 
   snippets: {
     'de-DE': deDE,
     'en-GB': enGB,
-    'nl-NL': nlNL
+    'en-US': enUS,
   },
   routes: {
-    list: {
-      component: 'flutterwave-transactions-list',
-      path: 'list',
-
+    index: {
+      components: {
+        default: 'flutterwave-transactions-list',
+      },
+      path: 'index',
     },
+    
     // detail: {
     //   component: 'flutterwave-payment-detail',
     //   path: 'detail/:id',
@@ -53,9 +54,10 @@ Shopware.Module.register('flutterwave-payment-module', {
   },
   navigation: [
     {
-      path: 'flutterwave.module.list',
-      label: 'Flutterwave Transactions',
+      path: 'flutterwave.payment.module.index',
+      label: 'module.navigation.label',
       id: 'flutterwave',
+      //privilege: 'flutterwave_transactions.viewer',
       parent: 'sw-order',
       color: '#ff3d58',
       icon: 'default-object-address',
