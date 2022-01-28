@@ -11,6 +11,7 @@
         "textTransactionOverview": "Zahlungsverkehr",
         "buttonAddBlogEntry": "Zahlung hinzufügen",
         "messageEmpty": "Keine Zahlungen vorhanden",
+        "flutterwaveDashboardLink": "Flutterwave Armaturenbrett",
         "table": {
             "title": "Titel",
             "active": "Aktiv",

@@ -27,6 +27,11 @@ class FlutterwavePaymentEntity extends Entity
     /**
      * @var string
      */
+    protected $technicalName;
+
+    /**
+     * @var string
+     */
     protected $orderTransactionId;
 
 
@@ -93,6 +98,7 @@ class FlutterwavePaymentEntity extends Entity
     /**
      * @var string|null
      */
+
     public function getCustomerId(): string
     {
         return $this->customerId;
@@ -209,6 +215,23 @@ class FlutterwavePaymentEntity extends Entity
     {
         return $this->environment;
     }
+    /**
+     * @return string $technicalName
+     */
+    public function getTechnicalName(): ?string
+    {
+
+        return $this->technicalName;
+    }
+
+    /**
+     * @param string $technicalName
+     */
+    public function setTechnicalName(string $technicalName): void
+    {
+        $this->technicalName = $technicalName;
+    }
+    
     /**
      * @param string $orderStateId
      * 

@@ -11,6 +11,7 @@
         "textTransactionOverview": "Flutterwave payment entries",
         "buttonAddBlogEntry": "Create new transaction entry",
         "messageEmpty": "No transactions entries ...",
+        "flutterwaveDashboardLink": "Flutterwave Dashboard",
         "table": {
             "title": "Title",
             "active": "Active",
