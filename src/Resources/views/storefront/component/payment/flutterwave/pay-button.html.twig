@@ -2,9 +2,9 @@
 
 {% block base_content %}
 	{{ parent() }}
-	 <pre>
+	 {# <pre>
 			{{ dump() }}
-		</pre> 
+		</pre>  #}
 
 	{% set transactionId = transaction.id %}
 	{% block pay_button %}

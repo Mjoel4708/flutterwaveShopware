@@ -2,7 +2,7 @@
   "name": "fluttewave/pay-plugin",
   "description": "Flutterwave Payment Plugin",
   "type": "shopware-platform-plugin",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "MIT",
   "autoload": {
     "psr-4": {
