@@ -125,7 +125,7 @@ Component.register('flutterwave-transactions-list', {
 
     methods: {
         getVariantFromPaymentState(order) {
-            console.log(order);
+            
             let technicalName = order.transactions.last().stateMachineState.technicalName;
             // set the payment status to the first transaction that is not cancelled
             for (let i = 0; i < order.transactions.length; i += 1) {
