@@ -24,7 +24,7 @@ class Migration1641987648FluttewwavePaymentEntity extends MigrationStep
             `customer_id` BINARY(16),
             `order_id` BINARY(16) NOT NULL,
             `order_transaction_id` BINARY(16) NULL,
-            `flutterwave_transaction_id` VARCHAR(16),
+            `flutterwave_transaction_id` VARCHAR(255),
             `created_at` DATETIME(3) NOT NULL,
             `updated_at` DATETIME(3) NULL,
             `payment_method` VARCHAR(255),

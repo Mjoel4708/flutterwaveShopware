@@ -1,0 +1,38 @@
+{
+    "module": {
+        "name": "Flutterwave Zahlung",
+        "title": "Flutterwave Zahlungsverkehr",
+        "description": "Flutterwave Zahlungsverkehr",
+        "navigation": {
+            "label": "Zahlungsverkehr"
+        }
+    },
+    "list": {
+        "textTransactionOverview": "Zahlungsverkehr",
+        "buttonAddBlogEntry": "Zahlung hinzufügen",
+        "messageEmpty": "Keine Zahlungen vorhanden",
+        "flutterwaveDashboardLink": "Flutterwave Armaturenbrett",
+        "table": {
+            "title": "Titel",
+            "active": "Aktiv",
+            "transaction": "Zahlungsverkehr"
+        }
+    },
+    "order": {
+        "transaction": {
+            "paid": "Bezahlt",
+            "cancelled": "Abgebrochen"
+        }
+    },
+    "transactions-list": {
+        "flutterwave_transaction_id": "Flutterwave Transaktions-ID",
+        "payment_id": "Zahlungs-ID",
+        "amount": "Betrag",
+        "created_at": "Erstellt am",
+        "updated_at": "Aktualisiert am",
+        "order_number": "Bestellnummer",
+        "customer": "Kunde",
+        "status": "Status",
+        "links": "Links"
+    }
+}

@@ -82,7 +82,7 @@ class Rave
      * @param boolean $overrideRefWithPrefix Set this parameter to true to use your prefix as the transaction reference
      * @return object
      * */
-    function __construct($secretKey, $prefix = 'RV', $overrideRefWithPrefix = false)
+    function __construct($secretKey, $prefix = 'BH', $overrideRefWithPrefix = false)
     {
         $this->secretKey = $secretKey;
         $this->publicKey = $_ENV['PUBLIC_KEY'];

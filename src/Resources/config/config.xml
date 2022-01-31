@@ -8,36 +8,40 @@
             <name>flutterwavePublicKey</name>
             <label>Public Key</label>
             <label lang="de-DE">Public Key</label>
+            <defaultValue>FLWPUBK_TEST-7aa8f8204bcb5d67cd7e38ef4427e4a4-X</defaultValue>
             <help-text>You can get your keys from Flutterwave dashboard https://dashboard.flutterwave.com/dashboard/settings/apis </help-text>
         </input-field>
         <input-field type="text">
             <name>flutterwaveSecretKey</name>
             <label>Secret Key</label>
             <label lang="de-DE">#FlutterwavePay# Secret Key</label>
+            <defaultValue>FLWSECK_TEST-262bad484ea5a1e4347f8cc58a203d9d-X</defaultValue>
             <help-text>You can get your keys from Flutterwave dashboard https://dashboard.flutterwave.com/dashboard/settings/apis </help-text>
         </input-field>
         <input-field type="text">
             <name>flutterwaveEncryptionKey</name>
             <label>Encryption Key</label>
             <label lang="de-DE">#FlutterwavePay# Encryption Key</label>
+            <defaultValue>FLWSECK_TEST05013f3864d9</defaultValue>
             <help-text>Get the Encryption Key from flutterwave dashboard https://dashboard.flutterwave.com</help-text>
         </input-field>
         <input-field type="single-select">
             <name>flutterwaveEvironment</name>
-            <label>#FlutterwavePay# Evironment</label>
+            <label>Evironment</label>
             <label lang="de-DE">Evironment</label>
+            <default>staging</default>
             <help-text>System's environment testing or live</help-text>
             <options>
                 <option>
                     <value>live</value>
-                    <id>Live</id>
+                    <id>live</id>
                     <name>live</name>
                     <name lang="de-DE">leben</name>
 
                 </option>
                 <option>
                     <value>staging</value>
-                    <id>Staging</id>
+                    <id>staging</id>
                     <name>staging</name>
                     <name lang="de-DE">
                         Prüfung

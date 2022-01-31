@@ -1,0 +1,80 @@
+{% block transaction_list %}
+	<sw-page class="flutterwave-transaction-list">
+		<template slot="smart-bar-header">
+			<h2>
+				{% block transaction_list_smart_bar_header_title_text %}
+					{{ $tc('list.textTransactionOverview') }}
+				{% endblock %}
+				{% block transaction_list_smart_bar_header_amount %}
+					<span v-if="!isLoading" class="sw-page__smart-bar-amount">
+						({{ total }})
+					</span>
+				{% endblock %}
+			</h2>
+		</template>
+		<template #language-switch>
+			<sw-language-switch @on-change="changeLanguage"></sw-language-switch>
+		</template>
+
+	{% endblock %}
+
+	<template #sidebar>
+		<sas-blog-vertical-tabs/>
+	</template>
+
+
+	<template #content>
+		{% block flutterwave_list_content %}
+			<sw-entity-listing v-if="transactions" :items="transactions" :repository="repository" :showselection="false" :columns="columns" allowcolumnedit="false" sortisallowed="true">
+
+				{% block flutterwave_list_grid_columns_links %}
+					<template slot="column-links" slot-scope="{item}">
+						<a target="_blank" class="sw-data-grid__cell-value" href="https://dashboard.flutterwave.com/">
+							{{ $tc('list.flutterwaveDashboardLink') }}
+						</a>
+						
+						
+					</template>
+					<template slot="column-order.orderNumber" slot-scope="{item}">
+						<router-link v-if="isUserOrdersViewer" class="sw-data-grid__cell-value" :to="{ name: 'sw.order.detail.base', params: { id: item.orderId }}">
+							{{ item.order.orderNumber }}
+						</router-link>
+						
+					</template>
+					<template slot="column-customer.lastName" slot-scope="{item}">
+						<router-link v-if="isUserCustomersViewer" class="sw-data-grid__cell-value" :to="{ name: 'sw.customer.detail.base', params: { id: item.customerId } }">
+							{{ item.customer.lastName }}
+							{{ item.customer.firstName }}
+						</router-link>
+					</template>
+
+					<template slot="column-status" slot-scope="{ item }">
+						<sw-label :variant="getVariantFromPaymentState(item.order)" appearance="pill">
+							{{ item.order.transactions.last().stateMachineState.translated.name }}
+						</sw-label>
+					</template>
+
+					<template slot="column-updatedAt" slot-scope="{ item }">
+						{{ item.updatedAt|date("m/d/Y") }}
+					</template>
+
+					<template slot="column-createdAt" slot-scope="{ item }">
+						{# <sw-time-ago :date="{{ item.createdAt }}" /> #}
+						{{ item.createdAt|date("m/d/Y") }}
+					</template>
+				{% endblock %}
+
+				{% block flutterwave_list_grid_columns_transactions %}{% endblock %}
+
+			</sw-entity-listing>
+		{% endblock %}
+
+		{% block sas_blog_list_empty_state %}
+			<sw-empty-state v-if="!isLoading && !total" :title="$tc('list.messageEmpty')">
+				{{ $tc('list.messageEmpty') }}
+			</sw-empty-state>
+		{% endblock %}
+	</template>
+
+
+</sw-page>
